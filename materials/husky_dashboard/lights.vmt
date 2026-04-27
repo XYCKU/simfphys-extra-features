@@ -1,0 +1,14 @@
+"UnlitGeneric"
+{
+	"$basetexture" "husky_dashboard/lights"
+	"$translucent" 1
+	"$colorfix" "{0 255 0}"
+	"Proxies"
+	{
+		"Equals"
+		{
+			srcVar1 $colorfix
+			resultVar	$color
+		}
+	}
+}

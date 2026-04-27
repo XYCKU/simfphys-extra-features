@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	"$basetexture" "husky_dashboard/turn_signal"
+	"$translucent" 1
+}
