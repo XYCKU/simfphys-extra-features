@@ -1,4 +1,4 @@
-SimfphysExtraFeatures.Dashboard.Register("models/dk_cars/audi/q7/ak_47.mdl", {
+SimfphysExtraFeatures.Registry.Register("models/dk_cars/audi/q7/ak_47.mdl", {
     indicators = {
         {
             sprite = "husky_dashboard/turn_signal",

@@ -1,4 +1,5 @@
 SimfphysExtraFeatures = SimfphysExtraFeatures or {}
+SimfphysExtraFeatures.Dashboard = SimfphysExtraFeatures.Dashboard or {}
 
 
 SimfphysExtraFeatures.Dashboard.Config = {
@@ -21,14 +22,3 @@ if CLIENT then
 
     include("sef/dashboards/audi_q7.lua")
 end
-
-hook.Add("Initialize", "SEF_BuildVehicleIndex", function()
-    local vehicles = list.Get("simfphys_vehicles")
-
-    for listName, data in pairs(vehicles) do
-        local model = data.Model or data.model
-        if model then
-            SimfphysExtraFeatures.VehicleListNameByModel[model] = listName
-        end
-    end
-end)

@@ -1,6 +1,4 @@
-local Registry = SimfphysExtraFeatures.Dashboard.Registry
-
-Registry:Register("models/crsk_autos/bmw/x6m_f86_2015.mdl", {
+SimfphysExtraFeatures.Registry.Register("models/crsk_autos/bmw/x6m_f86_2015.mdl", {
     elements = {
         {
             type = "sprite",

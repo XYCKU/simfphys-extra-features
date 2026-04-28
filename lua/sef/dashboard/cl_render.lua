@@ -1,6 +1,6 @@
 local ActiveVehicles = SimfphysExtraFeatures.ActiveVehicles
 local Config = SimfphysExtraFeatures.Dashboard.Config
-local Registry = SimfphysExtraFeatures.Dashboard.Registry
+local Registry = SimfphysExtraFeatures.Registry
 
 local function CheckCondition(veh, ind)
     if not ind.condition then
@@ -22,10 +22,10 @@ local function DrawDashboard_v1()
             continue
         end
 
-        local dashboardData = Registry[veh:GetModel()]
-        if not dashboardData or not dashboardData.indicators then continue end
+        local data = Registry.GetForModel(veh:GetModel())
+        if not data or not data.indicators then continue end
 
-        for _, indicator in ipairs(dashboardData.indicators) do
+        for _, indicator in ipairs(data.indicators) do
             if not CheckCondition(veh, indicator) then continue end
 
             local material = Material(indicator.sprite)
