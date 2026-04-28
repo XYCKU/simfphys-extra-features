@@ -7,6 +7,9 @@ SimfphysExtraFeatures.Dashboard.Config = {
 }
 
 if SERVER then
+    AddCSLuaFile()
+    AddCSLuaFile("sef/vehicle_conditions.lua")
+    AddCSLuaFile("sef/dashboard/indicator_types.lua")
     AddCSLuaFile("sef/dashboard/registry.lua")
     AddCSLuaFile("sef/sef_active_vehicles.lua")
     AddCSLuaFile("sef/dashboard/cl_render.lua")
@@ -16,6 +19,8 @@ end
 --include("sef/dashboard/registry.lua")
 
 if CLIENT then
+    include("sef/vehicle_conditions.lua")
+    include("sef/dashboard/indicator_types.lua")
     include("sef/dashboard/registry.lua")
     include("sef/sef_active_vehicles.lua")
     include("sef/dashboard/cl_render.lua")

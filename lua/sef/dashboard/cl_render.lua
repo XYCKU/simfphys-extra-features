@@ -1,13 +1,28 @@
 local ActiveVehicles = SimfphysExtraFeatures.ActiveVehicles
+
 local Config = SimfphysExtraFeatures.Dashboard.Config
+local Types = SimfphysExtraFeatures.Dashboard.PredefinedIndicators
+
 local Registry = SimfphysExtraFeatures.Registry
 
+
 local function CheckCondition(veh, ind)
-    if not ind.condition then
-        return true
+    local condition = ind.condition
+
+    if not condition then
+        if not ind.type then
+            return true
+        end
+
+        if not Types[ind.type] then
+            print("[SEF] Unknown indicator type:", indicator.type)
+            return true
+        end
+
+        condition = Types[ind.type]
     end
 
-    return ind.condition(veh)
+    return condition(veh)
 end
 
 local function DrawDashboard_v1()
