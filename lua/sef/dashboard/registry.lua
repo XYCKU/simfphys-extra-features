@@ -1,14 +1,13 @@
 SimfphysExtraFeatures = SimfphysExtraFeatures or {}
-SimfphysExtraFeatures.Dashboard = SimfphysExtraFeatures.Dashboard or {}
-SimfphysExtraFeatures.Dashboard.Registry = SimfphysExtraFeatures.Dashboard.Registry or {}
-SimfphysExtraFeatures.ActiveVehicles = SimfphysExtraFeatures.ActiveVehicles or {}
 
-function SimfphysExtraFeatures.Dashboard.Register(model, data)
-    SimfphysExtraFeatures.Dashboard.Registry[model] = data
+local SEFRegistry = {}
+
+function SimfphysExtraFeatures.Register(entityName, data)
+    SEFRegistry[entityName] = data
 end
 
-function SimfphysExtraFeatures.Dashboard.Get(model)
-    return SimfphysExtraFeatures.Dashboard.Registry[model]
+function SimfphysExtraFeatures.Get(entityName)
+    return SEFRegistry[entityName]
 end
 
 --[[

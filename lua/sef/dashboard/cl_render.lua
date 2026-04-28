@@ -15,8 +15,7 @@ local function DrawDashboard_v1()
     local plyPos = ply:GetPos()
     local renderDistance = Config.RenderDistance
     local renderDistanceSqr = renderDistance * renderDistance
-
-    for veh in pairs(ActiveVehicles) do
+    for veh in pairs(ActiveVehicles:Get()) do
         if not IsValid(veh) then continue end
 
         if plyPos:DistToSqr(veh:GetPos()) > renderDistanceSqr then
@@ -53,30 +52,8 @@ local function DrawDashboard_v1()
     end
 end
 
-local function OnEntityCreated(ent)
-    if not IsValid(ent) then return end
-    if ent:GetClass() ~= "gmod_sent_vehicle_fphysics_base" then return end
-    print("simfphys created")
-    ActiveVehicles[ent] = true
-    PrintTable(ActiveVehicles)
-end
 
-local function OnEntityRemoved(ent)
-    if not IsValid(ent) then return end
-    if ent:GetClass() ~= "gmod_sent_vehicle_fphysics_base" then return end
-    print("simfphys removed")
-    ActiveVehicles[ent] = nil
-    PrintTable(ActiveVehicles)
-end
 
-local function CleanupCache()
-    for ent in pairs(SimfphysExtraFeatures.Dashboard.ActiveVehicles) do
-        if not IsValid(ent) then
-            ActiveVehicles[ent] = nil
-        end
-    end
-end
-
-hook.Add("OnEntityCreated", "SEF_AddVehicleToCache", OnEntityCreated)
-hook.Add("EntityRemoved", "SEF_RemoveVehicleFromCache", OnEntityRemoved)
+hook.Add("OnEntityCreated", "SEF_AddVehicleToCache", SimfphysExtraFeatures.ActiveVehicles.OnEntityCreated)
+hook.Add("EntityRemoved", "SEF_RemoveVehicleFromCache", SimfphysExtraFeatures.ActiveVehicles.OnEntityRemoved)
 hook.Add("PostDrawTranslucentRenderables", "SEF_Dashboard", DrawDashboard_v1)
