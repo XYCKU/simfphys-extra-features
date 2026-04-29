@@ -41,7 +41,21 @@ SimfphysExtraFeatures.Registry.Register("models/dk_cars/audi/q7/ak_47.mdl", {
                 w = 128,
                 h = 128
             },
-        }
-    }
+        },
+    },
 
+    text_indicators = {
+        {
+            getter = function(veh) return "hi" end,
+            type = "handbrake",
+            pos = Vector(-13.8, 35.12, 54.5),
+            ang = Angle(0, 0, 59.5),
+            color = Color(255, 255, 255),
+            scale = 0.003,
+            font = "HUSKY_BMW_X6m",
+            horAlign = TEXT_ALIGN_CENTER,
+            vertAlign = TEXT_ALIGN_CENTER,
+            delay = 0.1,
+        },
+    },
 })

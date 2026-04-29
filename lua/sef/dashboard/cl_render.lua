@@ -5,6 +5,7 @@ local Types = SimfphysExtraFeatures.Dashboard.PredefinedIndicators
 
 local Registry = SimfphysExtraFeatures.Registry
 
+local default_vector = Vector(0, 0, 0)
 
 local function CheckCondition(veh, ind)
     local condition = ind.condition
@@ -15,7 +16,7 @@ local function CheckCondition(veh, ind)
         end
 
         if not Types[ind.type] then
-            print("[SEF] Unknown indicator type:", indicator.type)
+            print("[SEF] Unknown indicator type:", ind.type)
             return true
         end
 
@@ -23,6 +24,68 @@ local function CheckCondition(veh, ind)
     end
 
     return condition(veh)
+end
+
+local function DrawVehicleDashboardIndicators(veh, indicators)
+    for _, indicator in ipairs(indicators) do
+        if not CheckCondition(veh, indicator) then continue end
+
+        local material = Material(indicator.sprite)
+
+        cam.Start3D2D(
+            veh:LocalToWorld(indicator.pos),
+            veh:LocalToWorldAngles(indicator.ang),
+            indicator.scale
+        )
+
+        surface.SetMaterial(material)
+        surface.SetDrawColor(255, 255, 255)
+        local dim = indicator.dim or {
+            x = -32,
+            y = -32,
+            w = 64,
+            h = 64
+        }
+        
+        surface.DrawTexturedRectRotated(
+            dim.x, 
+            dim.y, 
+            dim.w, 
+            dim.h, 
+            indicator.rot or 0
+        )
+
+        cam.End3D2D()
+    end
+end
+
+local function DrawVehicleDashboardTexts(veh, texts)
+    for _, indicator in ipairs(texts) do
+        if not CheckCondition(veh, indicator) then continue end
+
+        if not indicator.getter then continue end
+
+        cam.Start3D2D(
+            veh:LocalToWorld(indicator.pos),
+            veh:LocalToWorldAngles(indicator.ang),
+            indicator.scale
+        )
+
+        surface.SetDrawColor(255, 255, 255)
+
+        indicator.offset = indicator.offset or default_vector
+        draw.SimpleText(
+            indicator.getter(veh), 
+            indicator.font, 
+            indicator.offset.x, 
+            indicator.offset.y, 
+            indicator.color, 
+            indicator.horAlign, 
+            indicator.vertAlign
+        )
+
+        cam.End3D2D()
+    end
 end
 
 local function DrawDashboard_v1()
@@ -36,33 +99,16 @@ local function DrawDashboard_v1()
         if plyPos:DistToSqr(veh:GetPos()) > renderDistanceSqr then
             continue
         end
-
+        
         local data = Registry.GetForModel(veh:GetModel())
-        if not data or not data.indicators then continue end
+        if not data then continue end
+        
+        if data.indicators then
+            DrawVehicleDashboardIndicators(veh, data.indicators)
+        end
 
-        for _, indicator in ipairs(data.indicators) do
-            if not CheckCondition(veh, indicator) then continue end
-
-            local material = Material(indicator.sprite)
-
-            cam.Start3D2D(
-                veh:LocalToWorld(indicator.pos),
-                veh:LocalToWorldAngles(indicator.ang),
-                indicator.scale
-            )
-
-            surface.SetMaterial(material)
-            surface.SetDrawColor(255, 255, 255)
-            local dim = indicator.dim or {
-                x = -32,
-                y = -32,
-                w = 64,
-                h = 64
-            }
-            
-            surface.DrawTexturedRectRotated(dim.x, dim.y, dim.w, dim.h, indicator.rot or 0)
-
-            cam.End3D2D()
+        if data.text_indicators then
+            DrawVehicleDashboardTexts(veh, data.text_indicators)
         end
     end
 end
