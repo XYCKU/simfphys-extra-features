@@ -18,3 +18,4 @@ Types.parking_lights = Conditions.ParkingLights
 Types.handbrake = Conditions.Handbrake
 Types.low_fuel = Conditions.LowFuel
 Types.check_engine = Conditions.CheckEngine
+Types.cruise = Conditions.CruiseMode

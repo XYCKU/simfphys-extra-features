@@ -14,8 +14,11 @@ if SERVER then
     AddCSLuaFile("sef/dashboard/registry.lua")
     AddCSLuaFile("sef/sef_active_vehicles.lua")
     AddCSLuaFile("sef/dashboard/cl_render.lua")
+
     AddCSLuaFile("sef/dashboards/audi_q7.lua")
     AddCSLuaFile("sef/dashboards/bmw_x6m_f86.lua")
+    AddCSLuaFile("sef/dashboards/ford_cv_fh3.lua")
+    AddCSLuaFile("sef/dashboards/rr_cullinan.lua")
 end
 
 --include("sef/dashboard/registry.lua")
@@ -30,4 +33,6 @@ if CLIENT then
 
     include("sef/dashboards/audi_q7.lua")
     include("sef/dashboards/bmw_x6m_f86.lua")
+    include("sef/dashboards/ford_cv_fh3.lua")
+    include("sef/dashboards/rr_cullinan.lua")
 end

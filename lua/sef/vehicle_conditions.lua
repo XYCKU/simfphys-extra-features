@@ -47,6 +47,10 @@ function Conditions.CheckEngine(veh)
     return veh:GetCurHealth() <= veh:GetMaxHealth() * CheckEnginePercentage
 end
 
+function Conditions.CruiseMode(veh)
+    return veh:GetIsCruiseModeOn()
+end
+
 function Conditions.Gears.IsReverse(veh)
     return veh:GetGear() == 1
 end

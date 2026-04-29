@@ -104,7 +104,7 @@ local data = {
             horAlign = TEXT_ALIGN_CENTER,
             vertAlign = TEXT_ALIGN_CENTER,
         },
-    }
+    },
 }
 
 SimfphysExtraFeatures.Registry.Register("models/crsk_autos/bmw/x6m_f86_2015.mdl", data)
