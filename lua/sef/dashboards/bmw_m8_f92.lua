@@ -50,7 +50,7 @@ local data = {
     },
     text_indicators = {
         {
-            getter = Formatters.GetBMWGearText,
+            getter = Formatters.GetAutomaticGearText,
             pos = Vector(-18.9, 29.38, 39.55),
             ang = Angle(0, 0, 72.65),
             offset = { x = 0, y = -360 },
@@ -61,7 +61,7 @@ local data = {
             vertAlign = TEXT_ALIGN_CENTER
         },
         {
-            getter = Formatters.GetSpeed,
+            getter = Formatters.GetSpeedInUnits,
             pos = Vector(-18.9, 29.38, 39.55),
             ang = Angle(0, 0, 72.65),
             offset = { x = 0, y = -210 },
@@ -73,7 +73,7 @@ local data = {
             delay = 0.1
         },
         {
-            getter = Formatters.GetSpeedUnit,
+            getter = Formatters.GetSpeedUnits,
             pos = Vector(-18.9, 29.38, 39.55),
             ang = Angle(0, 0, 72.65),
             offset = { x = 130, y = -235 },

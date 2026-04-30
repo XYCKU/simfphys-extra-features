@@ -11,7 +11,8 @@ if SERVER then
     AddCSLuaFile("sef/vehicle_conditions.lua")
     AddCSLuaFile("sef/dashboard/indicator_types.lua")
     AddCSLuaFile("sef/dashboard/registry.lua")
-    AddCSLuaFile("sef/environment/sef_environment.lua")
+    AddCSLuaFile("sef/providers/sef_environment.lua")
+    AddCSLuaFile("sef/providers/sef_speedometer.lua")
     AddCSLuaFile("sef/sef_active_vehicles.lua")
     AddCSLuaFile("sef/formatters.lua")
     AddCSLuaFile("sef/dashboard/cl_render.lua")
@@ -25,11 +26,12 @@ end
 
 --include("sef/dashboard/registry.lua")
 
-if CLIENT then
+if CLIENT then 
     include("sef/vehicle_conditions.lua")
     include("sef/dashboard/indicator_types.lua")
     include("sef/dashboard/registry.lua")
-    include("sef/environment/sef_environment.lua")
+    include("sef/providers/sef_environment.lua")
+    include("sef/providers/sef_speedometer.lua")
     include("sef/sef_active_vehicles.lua")
     include("sef/formatters.lua")
     include("sef/dashboard/cl_render.lua")
