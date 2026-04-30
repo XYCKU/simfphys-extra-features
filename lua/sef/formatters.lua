@@ -15,6 +15,7 @@ function Formatters.GetAutomaticGearText(veh)
     if Conditions.Gears.IsParking(veh) then return "P" end
     if Conditions.Gears.IsReverse(veh) then return "R" end
     if Conditions.Gears.IsNeutral(veh) then return "N" end
+    if Conditions.Gears.IsSportMode(veh) then return "S" end
     return "D"
 end
 

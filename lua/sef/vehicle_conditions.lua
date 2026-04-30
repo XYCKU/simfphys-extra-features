@@ -59,6 +59,10 @@ function Conditions.Gears.IsNeutral(veh)
     return veh:GetGear() == 2
 end
 
+function Conditions.Gears.IsSportMode(veh)
+    return veh:GetGear() > 2 and GetConVar("cl_simfphys_sport"):GetBool()
+end
+
 function Conditions.Gears.IsParking(veh)
     return Conditions.Gears.IsNeutral(veh)
         and math.floor(veh:GetVelocity():Length()) == 0
