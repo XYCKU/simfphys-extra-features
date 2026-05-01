@@ -11,12 +11,22 @@ local Speed = SimfphysExtraFeatures.Providers.Speed
 local SpeedUnits = SimfphysExtraFeatures.Units.Speed
 local TempUnits = SimfphysExtraFeatures.Units.Temperature
 
+Formatters.Gears = Formatters.Gears or {
+    Parking = "P",
+    Reverse = "R",
+    Neutral = "N",
+    Drive = "D",
+    Sport = "S",
+    Low = "L"
+}
+
 function Formatters.GetAutomaticGearText(veh)
-    if Conditions.Gears.IsParking(veh) then return "P" end
-    if Conditions.Gears.IsReverse(veh) then return "R" end
-    if Conditions.Gears.IsNeutral(veh) then return "N" end
-    if Conditions.Gears.IsSportMode(veh) then return "S" end
-    return "D"
+    local gear = Conditions.Gears.GetAutomaticGear(veh)
+    if gear == Conditions.Gears.Parking then return Formatters.Parking end
+    if gear == Conditions.Gears.Reverse then return Formatters.Reverse end
+    if gear == Conditions.Gears.Neutral then return Formatters.Neutral end
+    if gear == Conditions.Gears.Sport then return Formatters.Sport end
+    return Formatters.Drive
 end
 
 function Formatters.SpeedUnitToString(unit)

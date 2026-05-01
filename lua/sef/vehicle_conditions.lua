@@ -1,6 +1,13 @@
 SimfphysExtraFeatures = SimfphysExtraFeatures or {}
 SimfphysExtraFeatures.Conditions = SimfphysExtraFeatures.Conditions or {}
-SimfphysExtraFeatures.Conditions.Gears = SimfphysExtraFeatures.Conditions.Gears or {}
+SimfphysExtraFeatures.Conditions.Gears = SimfphysExtraFeatures.Conditions.Gears or {
+    Parking = 1,
+    Reverse = 2,
+    Neutral = 3,
+    Drive = 4,
+    Sport = 5,
+    Low = 6
+}
 
 local Conditions = SimfphysExtraFeatures.Conditions
 
@@ -59,8 +66,12 @@ function Conditions.Gears.IsNeutral(veh)
     return veh:GetGear() == 2
 end
 
+function Conditions.Gears.IsDrive(veh)
+   return veh:GetGear() > 2 
+end
+
 function Conditions.Gears.IsSportMode(veh)
-    return veh:GetGear() > 2 and GetConVar("cl_simfphys_sport"):GetBool()
+    return Conditions.Gears.IsDrive(veh) and GetConVar("cl_simfphys_sport"):GetBool()
 end
 
 function Conditions.Gears.IsParking(veh)
@@ -78,4 +89,12 @@ function Conditions.Gears.NormalizedGear(veh)
     if Conditions.Gears.IsReverse(veh) then return -1 end
     if Conditions.Gears.IsNeutral(veh) then return 0 end
     return 1
+end
+
+function Conditions.Gears.GetAutomaticGear(veh)
+    if Conditions.Gears.IsParking(veh) then return Conditions.Gears.Parking end
+    if Conditions.Gears.IsReverse(veh) then return Conditions.Gears.Reverse end
+    if Conditions.Gears.IsNeutral(veh) then return Conditions.Gears.Neutral end
+    if Conditions.Gears.IsSportMode(veh) then return Conditions.Gears.Sport end
+    return Conditions.Gears.Drive
 end

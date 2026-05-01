@@ -1,4 +1,37 @@
+local Conditions = SimfphysExtraFeatures.Conditions
 local Formatters = SimfphysExtraFeatures.Formatters
+
+local function Not(fn)
+    return function(...)
+        return not fn(...)
+    end
+end
+
+local function And(...)
+    local fns = {...}
+
+    return function(...)
+        for i = 1, #fns do
+            if not fns[i](...) then
+                return false
+            end
+        end
+        return true
+    end
+end
+
+local function Or(...)
+    local fns = {...}
+
+    return function(...)
+        for i = 1, #fns do
+            if fns[i](...) then
+                return true
+            end
+        end
+        return false
+    end
+end
 
 local data = {
     indicators = {
@@ -100,32 +133,112 @@ local data = {
             vertAlign = TEXT_ALIGN_CENTER
         },
         {
-            getter = function()
-                return "P   R   N   D   L"
-            end,
+            getter = function() return Formatters.Gears.Parking end,
             pos = Vector(-17.57, 50.65, 58),
             ang = Angle(0, 0, 60),
+            offset = { x = -52, y = 0 },
             color = Color(255, 255, 255),
             scale = 0.0055,
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
-            vertAlign = TEXT_ALIGN_CENTER
+            vertAlign = TEXT_ALIGN_CENTER,
+            condition = Not(Conditions.Gears.IsParking),
         },
         {
-            getter = function(veh)
-                local gear = veh:GetGear()
-                if gear == 1 then return "R" end
-                if gear == 2 then return "N" end
-                return "D"
-            end,
+            getter = function() return Formatters.Gears.Parking end,
             pos = Vector(-17.57, 50.65, 58),
             ang = Angle(0, 0, 60),
+            offset = { x = -52, y = 0 },
             color = Color(255, 30, 0),
             scale = 0.0055,
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
-            vertAlign = TEXT_ALIGN_CENTER
-        }
+            vertAlign = TEXT_ALIGN_CENTER,
+            condition = Conditions.Gears.IsParking,
+        },
+        {
+            getter = function() return Formatters.Gears.Reverse end,
+            pos = Vector(-17.57, 50.65, 58),
+            ang = Angle(0, 0, 60),
+            offset = { x = -26, y = 0 },
+            color = Color(255, 255, 255),
+            scale = 0.0055,
+            font = "HUSKY_chevy_zr2",
+            horAlign = TEXT_ALIGN_CENTER,
+            vertAlign = TEXT_ALIGN_CENTER,
+            condition = Not(Conditions.Gears.IsReverse),
+        },
+        {
+            getter = function() return Formatters.Gears.Reverse end,
+            pos = Vector(-17.57, 50.65, 58),
+            ang = Angle(0, 0, 60),
+            offset = { x = -26, y = 0 },
+            color = Color(255, 30, 0),
+            scale = 0.0055,
+            font = "HUSKY_chevy_zr2",
+            horAlign = TEXT_ALIGN_CENTER,
+            vertAlign = TEXT_ALIGN_CENTER,
+            condition = Conditions.Gears.IsReverse,
+        },
+        {
+            getter = function() return Formatters.Gears.Neutral end,
+            pos = Vector(-17.57, 50.65, 58),
+            ang = Angle(0, 0, 60),
+            offset = { x = 0, y = 0 },
+            color = Color(255, 255, 255),
+            scale = 0.0055,
+            font = "HUSKY_chevy_zr2",
+            horAlign = TEXT_ALIGN_CENTER,
+            vertAlign = TEXT_ALIGN_CENTER,
+            condition = Or(Not(Conditions.Gears.IsNeutral), Conditions.Gears.IsParking),
+        },
+        {
+            getter = function() return Formatters.Gears.Neutral end,
+            pos = Vector(-17.57, 50.65, 58),
+            ang = Angle(0, 0, 60),
+            offset = { x = 0, y = 0 },
+            color = Color(255, 30, 0),
+            scale = 0.0055,
+            font = "HUSKY_chevy_zr2",
+            horAlign = TEXT_ALIGN_CENTER,
+            vertAlign = TEXT_ALIGN_CENTER,
+            condition = And(Conditions.Gears.IsNeutral, Not(Conditions.Gears.IsParking))
+        },
+        {
+            getter = function() return Formatters.Gears.Drive end,
+            pos = Vector(-17.57, 50.65, 58),
+            ang = Angle(0, 0, 60),
+            offset = { x = 26, y = 0 },
+            color = Color(255, 255, 255),
+            scale = 0.0055,
+            font = "HUSKY_chevy_zr2",
+            horAlign = TEXT_ALIGN_CENTER,
+            vertAlign = TEXT_ALIGN_CENTER,
+            condition = Not(Conditions.Gears.IsDrive),
+        },
+        {
+            getter = function() return Formatters.Gears.Drive end,
+            pos = Vector(-17.57, 50.65, 58),
+            ang = Angle(0, 0, 60),
+            offset = { x = 26, y = 0 },
+            color = Color(255, 30, 0),
+            scale = 0.0055,
+            font = "HUSKY_chevy_zr2",
+            horAlign = TEXT_ALIGN_CENTER,
+            vertAlign = TEXT_ALIGN_CENTER,
+            condition = Conditions.Gears.IsDrive,
+        },
+        {
+            getter = function() return Formatters.Gears.Low end,
+            pos = Vector(-17.57, 50.65, 58),
+            ang = Angle(0, 0, 60),
+            offset = { x = 52, y = 0 },
+            color = Color(255, 255, 255),
+            scale = 0.0055,
+            font = "HUSKY_chevy_zr2",
+            horAlign = TEXT_ALIGN_CENTER,
+            vertAlign = TEXT_ALIGN_CENTER,
+        },
     }
 }
 
