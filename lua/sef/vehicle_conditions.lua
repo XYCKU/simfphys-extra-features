@@ -76,7 +76,7 @@ end
 
 function Conditions.Gears.IsParking(veh)
     return Conditions.Gears.IsNeutral(veh)
-        and math.floor(veh:GetVelocity():Length()) == 0
+        and math.floor(veh:GetVelocity():Length()) < 2
 end
 
 function Conditions.Gears.ForwardGear(veh)

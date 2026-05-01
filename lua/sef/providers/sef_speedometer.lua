@@ -9,8 +9,6 @@ SimfphysExtraFeatures.Units.Speed = {
 SimfphysExtraFeatures.Providers = SimfphysExtraFeatures.Providers or {}
 SimfphysExtraFeatures.Providers.Speed = SimfphysExtraFeatures.Providers.Speed or {}
 
-SimfphysExtraFeatures.Providers.Speed = {}
-
 local Speed = SimfphysExtraFeatures.Providers.Speed
 local SpeedUnits = SimfphysExtraFeatures.Units.Speed
 

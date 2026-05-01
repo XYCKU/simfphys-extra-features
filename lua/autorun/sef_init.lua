@@ -22,6 +22,7 @@ if SERVER then
     AddCSLuaFile("sef/dashboards/bmw_x6m_f86.lua")
     AddCSLuaFile("sef/dashboards/chevy_colorado_zr2.lua")
     AddCSLuaFile("sef/dashboards/ford_cv_fh3.lua")
+    AddCSLuaFile("sef/dashboards/mercedes_gt63_s.lua")
     AddCSLuaFile("sef/dashboards/rr_cullinan.lua")
     AddCSLuaFile("sef/dashboards/toyota_supra_2020.lua")
 end
@@ -43,6 +44,7 @@ if CLIENT then
     include("sef/dashboards/bmw_x6m_f86.lua")
     include("sef/dashboards/chevy_colorado_zr2.lua")
     include("sef/dashboards/ford_cv_fh3.lua")
+    include("sef/dashboards/mercedes_gt63_s.lua")
     include("sef/dashboards/rr_cullinan.lua")
     include("sef/dashboards/toyota_supra_2020.lua")
 end
