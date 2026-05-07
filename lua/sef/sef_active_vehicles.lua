@@ -34,3 +34,6 @@ function SimfphysExtraFeatures.ActiveVehicles.CleanupCache()
         end
     end
 end
+
+hook.Add("OnEntityCreated", "SEF_AddVehicleToCache", SimfphysExtraFeatures.ActiveVehicles.OnEntityCreated)
+hook.Add("EntityRemoved", "SEF_RemoveVehicleFromCache", SimfphysExtraFeatures.ActiveVehicles.OnEntityRemoved)

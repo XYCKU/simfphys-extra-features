@@ -1,18 +1,22 @@
 SimfphysExtraFeatures = SimfphysExtraFeatures or {}
 SimfphysExtraFeatures.Conditions = SimfphysExtraFeatures.Conditions or {}
-SimfphysExtraFeatures.Conditions.Gears = SimfphysExtraFeatures.Conditions.Gears or {
-    Parking = 1,
-    Reverse = 2,
-    Neutral = 3,
-    Drive = 4,
-    Sport = 5,
-    Low = 6
+SimfphysExtraFeatures.Conditions.Gears = {
+    Parking = 0,
+    Reverse = 1,
+    Neutral = 2,
+    Drive = 3,
+    Sport = 4,
+    Low = 5
 }
 
 local Conditions = SimfphysExtraFeatures.Conditions
 
 local LowFuelPercentage = 0.1
 local CheckEnginePercentage = 0.6
+
+function Conditions.Driver(veh)
+    return veh:GetDriver()
+end
 
 function Conditions.LeftSignal(veh)
     return veh.flashnum == 1 and veh.signal_left
@@ -76,7 +80,7 @@ end
 
 function Conditions.Gears.IsParking(veh)
     return Conditions.Gears.IsNeutral(veh)
-        and math.floor(veh:GetVelocity():Length()) < 2
+        and Conditions.Handbrake(veh)
 end
 
 function Conditions.Gears.ForwardGear(veh)

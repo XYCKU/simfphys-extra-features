@@ -43,4 +43,10 @@ SimfphysExtraFeatures.Registry.Register("models/dk_cars/audi/q7/ak_47.mdl", {
             },
         },
     },
+    features = {
+        "trunk",
+        "hood",
+        "air_up",
+        "air_down",
+    }
 })

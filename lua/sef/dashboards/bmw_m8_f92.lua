@@ -1,4 +1,5 @@
 local Formatters = SimfphysExtraFeatures.Formatters
+
 local data = {
     indicators = {
         {
@@ -58,7 +59,7 @@ local data = {
             scale = 0.007,
             font = "HUSKY_BMW_M8",
             horAlign = TEXT_ALIGN_CENTER,
-            vertAlign = TEXT_ALIGN_CENTER
+            vertAlign = TEXT_ALIGN_CENTER,
         },
         {
             getter = Formatters.GetSpeedInUnits,

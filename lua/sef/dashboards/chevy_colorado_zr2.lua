@@ -1,37 +1,6 @@
 local Conditions = SimfphysExtraFeatures.Conditions
 local Formatters = SimfphysExtraFeatures.Formatters
-
-local function Not(fn)
-    return function(...)
-        return not fn(...)
-    end
-end
-
-local function And(...)
-    local fns = {...}
-
-    return function(...)
-        for i = 1, #fns do
-            if not fns[i](...) then
-                return false
-            end
-        end
-        return true
-    end
-end
-
-local function Or(...)
-    local fns = {...}
-
-    return function(...)
-        for i = 1, #fns do
-            if fns[i](...) then
-                return true
-            end
-        end
-        return false
-    end
-end
+local Helpers = SimfphysExtraFeatures.Helpers
 
 local data = {
     indicators = {
@@ -142,7 +111,7 @@ local data = {
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
             vertAlign = TEXT_ALIGN_CENTER,
-            condition = Not(Conditions.Gears.IsParking),
+            condition = Helpers.Not(Conditions.Gears.IsParking),
         },
         {
             getter = function() return Formatters.Gears.Parking end,
@@ -166,7 +135,7 @@ local data = {
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
             vertAlign = TEXT_ALIGN_CENTER,
-            condition = Not(Conditions.Gears.IsReverse),
+            condition = Helpers.Not(Conditions.Gears.IsReverse),
         },
         {
             getter = function() return Formatters.Gears.Reverse end,
@@ -190,7 +159,7 @@ local data = {
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
             vertAlign = TEXT_ALIGN_CENTER,
-            condition = Or(Not(Conditions.Gears.IsNeutral), Conditions.Gears.IsParking),
+            condition = Helpers.Or(Helpers.Not(Conditions.Gears.IsNeutral), Conditions.Gears.IsParking),
         },
         {
             getter = function() return Formatters.Gears.Neutral end,
@@ -202,7 +171,7 @@ local data = {
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
             vertAlign = TEXT_ALIGN_CENTER,
-            condition = And(Conditions.Gears.IsNeutral, Not(Conditions.Gears.IsParking))
+            condition = Helpers.And(Conditions.Gears.IsNeutral, Helpers.Not(Conditions.Gears.IsParking))
         },
         {
             getter = function() return Formatters.Gears.Drive end,
@@ -214,7 +183,7 @@ local data = {
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
             vertAlign = TEXT_ALIGN_CENTER,
-            condition = Not(Conditions.Gears.IsDrive),
+            condition = Helpers.Not(Conditions.Gears.IsDrive),
         },
         {
             getter = function() return Formatters.Gears.Drive end,

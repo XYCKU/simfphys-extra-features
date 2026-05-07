@@ -113,8 +113,4 @@ local function DrawDashboard_v1()
     end
 end
 
-
-
-hook.Add("OnEntityCreated", "SEF_AddVehicleToCache", SimfphysExtraFeatures.ActiveVehicles.OnEntityCreated)
-hook.Add("EntityRemoved", "SEF_RemoveVehicleFromCache", SimfphysExtraFeatures.ActiveVehicles.OnEntityRemoved)
 hook.Add("PostDrawTranslucentRenderables", "SEF_Dashboard", DrawDashboard_v1)

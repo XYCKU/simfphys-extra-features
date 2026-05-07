@@ -22,11 +22,11 @@ Formatters.Gears = Formatters.Gears or {
 
 function Formatters.GetAutomaticGearText(veh)
     local gear = Conditions.Gears.GetAutomaticGear(veh)
-    if gear == Conditions.Gears.Parking then return Formatters.Parking end
-    if gear == Conditions.Gears.Reverse then return Formatters.Reverse end
-    if gear == Conditions.Gears.Neutral then return Formatters.Neutral end
-    if gear == Conditions.Gears.Sport then return Formatters.Sport end
-    return Formatters.Drive
+    if gear == Conditions.Gears.Parking then return Formatters.Gears.Parking end
+    if gear == Conditions.Gears.Reverse then return Formatters.Gears.Reverse end
+    if gear == Conditions.Gears.Neutral then return Formatters.Gears.Neutral end
+    if gear == Conditions.Gears.Sport then return Formatters.Gears.Sport end
+    return Formatters.Gears.Drive
 end
 
 function Formatters.SpeedUnitToString(unit)
