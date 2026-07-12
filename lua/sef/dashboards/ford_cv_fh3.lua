@@ -48,9 +48,6 @@ local data = {
             scale = 0.006,
         },
     },
-}
-
-local features_data = {
     features = {
         ["trunk"] = {
             type = "animated",
@@ -75,4 +72,3 @@ local features_data = {
 local model = "models/tdmcars/emergency/for_crownvic_fh3.mdl"
 
 SimfphysExtraFeatures.Registry.Register(model, data)
-SimfphysExtraFeatures.Features.RegisterVehicle(model, features_data)

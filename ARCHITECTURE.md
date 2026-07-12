@@ -308,10 +308,10 @@ Features.RegisterDefinition("trunk", {
 })
 ```
 
-Each vehicle separately enables and configures the definitions it supports:
+The vehicle registry enables and configures the definitions it supports:
 
 ```lua
-Features.RegisterVehicle("models/example/car.mdl", {
+SimfphysExtraFeatures.Registry.Register("models/example/car.mdl", {
     features = {
         trunk = {
             type = "animated",

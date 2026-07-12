@@ -45,9 +45,6 @@ SimfphysExtraFeatures.Registry.Register(model, {
             },
         },
     },
-})
-
-SimfphysExtraFeatures.Features.RegisterVehicle(model, {
     features = {
         hood = {},
         air_up = {},

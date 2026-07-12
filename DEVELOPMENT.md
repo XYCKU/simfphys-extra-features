@@ -240,10 +240,10 @@ Features.RegisterDefinition("feature_id", {
 })
 ```
 
-Enable a definition for a vehicle separately:
+Enable a definition in the vehicle's registry entry:
 
 ```lua
-Features.RegisterVehicle("models/example/car.mdl", {
+SimfphysExtraFeatures.Registry.Register("models/example/car.mdl", {
     features = {
         feature_id = {}
     }
