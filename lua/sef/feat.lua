@@ -84,11 +84,33 @@ local Keybinds = {
     [KEY_L] = "air_down",
 }
 
-local function ProcessInput(ply, button)
-    local feature = Keybinds[button]
-    if not feature then return end
-    print(feature)
-    SimfphysExtraFeatures.Features.Execute(feature, ply)
+local NetMessage = "SEF_RequestFeature"
+local AllowedFeatures = {}
+
+for _, feature_id in pairs(Keybinds) do
+    AllowedFeatures[feature_id] = true
 end
 
-hook.Add("PlayerButtonUp", "SEF_Features", ProcessInput)
+if SERVER then
+    util.AddNetworkString(NetMessage)
+
+    net.Receive(NetMessage, function(_, ply)
+        local feature_id = net.ReadString()
+        if not AllowedFeatures[feature_id] then return end
+
+        Features.Execute(feature_id, ply)
+    end)
+end
+
+if CLIENT then
+    local function ProcessInput(_, button)
+        local feature_id = Keybinds[button]
+        if not feature_id then return end
+
+        net.Start(NetMessage)
+        net.WriteString(feature_id)
+        net.SendToServer()
+    end
+
+    hook.Add("PlayerButtonUp", "SEF_Features", ProcessInput)
+end

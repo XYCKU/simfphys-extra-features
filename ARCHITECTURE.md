@@ -333,7 +333,10 @@ Flow:
 Keyboard Input
       |
       v
-Input Manager
+Client Input Manager
+      |
+      v
+Server Feature Request Validation
       |
       v
 Feature Registry

@@ -270,6 +270,8 @@ Features.Types["animated"] = {
 --========================================================--
 
 function Features.Execute(feature_id, ply, extra)
+    if not SERVER then return end
+
     local definition = Features.GetDefinition(feature_id)
     if not definition then return end
 
@@ -335,15 +337,17 @@ end
 --  GLOBAL TICK
 --========================================================--
 
-hook.Add("Think", "SEF_FeaturesTick", function()
-    local dt = FrameTime()
+if SERVER then
+    hook.Add("Think", "SEF_FeaturesTick", function()
+        local dt = FrameTime()
 
-    for veh in pairs(ActiveVehicles) do
-        if not IsValid(veh) then
-            ActiveVehicles[veh] = nil
-            continue
+        for veh in pairs(ActiveVehicles) do
+            if not IsValid(veh) then
+                ActiveVehicles[veh] = nil
+                continue
+            end
+
+            Features.TickVehicle(veh, dt)
         end
-
-        Features.TickVehicle(veh, dt)
-    end
-end)
+    end)
+end
