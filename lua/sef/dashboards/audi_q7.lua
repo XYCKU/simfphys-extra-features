@@ -1,4 +1,6 @@
-SimfphysExtraFeatures.Registry.Register("models/dk_cars/audi/q7/ak_47.mdl", {
+local model = "models/dk_cars/audi/q7/ak_47.mdl"
+
+SimfphysExtraFeatures.Registry.Register(model, {
     indicators = {
         {
             sprite = "husky_dashboard/turn_signal",
@@ -43,10 +45,12 @@ SimfphysExtraFeatures.Registry.Register("models/dk_cars/audi/q7/ak_47.mdl", {
             },
         },
     },
+})
+
+SimfphysExtraFeatures.Features.RegisterVehicle(model, {
     features = {
-        "trunk",
-        "hood",
-        "air_up",
-        "air_down",
-    }
+        hood = {},
+        air_up = {},
+        air_down = {},
+    },
 })

@@ -1,14 +1,6 @@
 local Conditions = SimfphysExtraFeatures.Conditions
 local Features = SimfphysExtraFeatures.Features
 
---[[
-
-    feature: 
-        - id
-        - name
-        - condition to activate
-        - tick_action
-]]
 
 Features.RegisterDefinition("trunk", {
     name = "Toggle Trunk",
@@ -41,7 +33,7 @@ Features.RegisterDefinition("trunk", {
     end
 })
 
-Features.Register("hood", {
+Features.RegisterDefinition("hood", {
     name = "Toggle Hood",
 
     condition = function(veh, ply)
@@ -53,7 +45,7 @@ Features.Register("hood", {
     end
 })
 
-Features.Register("air_up", {
+Features.RegisterDefinition("air_up", {
     name = "Raise Suspension",
 
     condition = function(veh, ply)
@@ -69,7 +61,7 @@ Features.Register("air_up", {
     end
 })
 
-Features.Register("air_down", {
+Features.RegisterDefinition("air_down", {
     name = "Lower Suspension",
 
     condition = function(veh, ply)

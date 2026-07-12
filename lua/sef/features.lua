@@ -32,7 +32,7 @@ end
 --  VEHICLE CONFIGS
 --========================================================--
 
-function Features.Register(model, data)
+function Features.RegisterVehicle(model, data)
     Features.Configs[model] = data.features or {}
 end
 
