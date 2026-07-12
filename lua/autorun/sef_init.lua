@@ -39,7 +39,6 @@ if SERVER then
     include("sef/providers/sef_environment.lua")
     include("sef/providers/sef_speedometer.lua")
     include("sef/formatters.lua")
-    include("sef/dashboard/cl_render.lua")
 
     include("sef/dashboards/audi_q7.lua")
     include("sef/dashboards/bmw_m8_f92.lua")
