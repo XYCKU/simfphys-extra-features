@@ -30,7 +30,6 @@ The long-term goal is to allow new vehicles to be supported by writing configura
 * Dashboard text rendering
 * Configurable positions, rotations and scaling
 * Support for custom fonts
-* Update delays simulation for text indicators like speedometer
 
 ### Dashboard Indicators
 
@@ -158,9 +157,4 @@ Additional documentation is available in the repository:
 
 * ARCHITECTURE.md
 * DEVELOPMENT.md
-* STYLE_GUIDE.md
-* CODING_PRINCIPLES.md
-* DECISIONS.md
-* ROADMAP.md
-
-These documents describe the project's architecture, engineering decisions, and ongoing development.
+These documents describe the project's current architecture and development workflow.

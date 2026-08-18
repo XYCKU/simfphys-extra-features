@@ -2,120 +2,72 @@
 
 ## Overview
 
-`SimfphysExtraFeatures` (SEF) is a modular Garry's Mod addon designed to provide reusable vehicle features and dashboard systems for `simfphys` vehicles.
+Simfphys Extra Features (SEF) extends simfphys vehicles through per-model data
+registered with `SimfphysExtraFeatures.Registry`. The framework owns rendering,
+state checks, feature execution, and external providers; vehicle files describe
+only the model-specific configuration.
 
-The main goal is to separate:
+## Runtime and realms
 
-* vehicle-specific configuration
-* rendering logic
-* state detection
-* reusable formatters
-* interactive vehicle features
+`lua/autorun/sef_init.lua` is the entry point. It keeps one manifest for shared
+modules, client-only modules, and vehicle configuration files.
 
-The addon should allow other vehicle addons to register their own dashboards and features without modifying SEF source code.
+- Shared modules are sent to clients and included in both realms.
+- `sef/dashboard/cl_render.lua` is sent to clients and included only client-side.
+- The server handles feature key presses, resolves the player's simfphys
+  vehicle, executes the action, and advances active feature animations.
 
----
+The server and client have separate Lua states. Configuration is loaded in both
+states, but feature state and execution are server-authoritative.
 
-## Core Concepts
+## Module layout
 
-### Registry-Based Architecture
-
-SEF uses registries as the main extension mechanism.
-
-External code does not directly modify internal tables. Instead, it registers data through public APIs.
-
-Example:
-
-```lua
-SimfphysExtraFeatures.Registry.Register(
-    "models/example/car.mdl",
-    dashboardData
-)
-```
-
-The registry stores:
-
-* dashboard indicators
-* text indicators
-* vehicle feature definitions
-
----
-
-## Module Structure
-
-Current structure:
-
-```lua
+```text
 lua/
-└── sef/
-    ├── init.lua
-    │
-    ├── registry/
-    │   └── dashboard.lua
-    │
-    ├── dashboard/
-    │   ├── cl_render.lua
-    │   ├── indicators.lua
-    │   └── text.lua
-    │
-    ├── conditions/
-    │   ├── gears.lua
-    │   └── vehicle.lua
-    │
-    ├── formatters/
-    │   ├── speed.lua
-    │   ├── gears.lua
-    │   ├── temperature.lua
-    │   └── time.lua
-    │
-    ├── features/
-    │   ├── registry.lua
-    │   ├── execution.lua
-    │   └── input.lua
-    │
-    └── weather/
-        ├── provider.lua
-        ├── stormfox.lua
-        └── default.lua
+|-- autorun/sef_init.lua
+`-- sef/
+    |-- registry.lua
+    |-- vehicle_conditions.lua
+    |-- helpers.lua
+    |-- formatters.lua
+    |-- sef_active_vehicles.lua
+    |-- features.lua
+    |-- feat.lua
+    |-- dashboard/
+    |   |-- cl_render.lua
+    |   `-- indicator_types.lua
+    |-- providers/
+    |   |-- sef_environment.lua
+    |   `-- sef_speedometer.lua
+    `-- dashboards/
+        `-- <vehicle>.lua
 ```
 
----
+## Vehicle registry
 
-## Dashboard System
-
-### Purpose
-
-The dashboard system renders vehicle instrument clusters.
-
-A dashboard consists of:
-
-* sprite indicators
-* text indicators
-
-Example:
+`Registry.Register(model, data)` is the only public registration path for a
+vehicle. It stores dashboard data and forwards feature configuration to the
+feature system.
 
 ```lua
-{
+SimfphysExtraFeatures.Registry.Register("models/example/car.mdl", {
     indicators = {},
-    text_indicators = {}
-}
+    text_indicators = {},
+    features = {},
+})
 ```
 
----
+The registry synchronizes feature configuration after the feature module loads,
+so a vehicle registration is retained if it occurs early.
 
-## Indicators
+## Dashboard system
 
-Indicators represent visual icons:
+The client renderer retrieves a vehicle's registry entry by model and renders
+its `indicators` and `text_indicators` while the vehicle is within the configured
+render distance.
 
-Examples:
-
-* turn signals
-* headlights
-* handbrake
-* engine warning
-* fuel warning
-
-Each indicator contains:
+Indicator entries contain a material path, position, angle, scale, and either a
+predefined `type` or custom `condition`.
 
 ```lua
 {
@@ -123,334 +75,59 @@ Each indicator contains:
     type = "check_engine",
     pos = Vector(),
     ang = Angle(),
-    scale = 0.005
+    scale = 0.005,
 }
 ```
 
-The renderer decides when an indicator is visible based on its type.
+Text entries contain a getter and drawing settings. Getters reuse the formatter
+and provider APIs instead of performing rendering themselves.
 
-Custom conditions should only be used for vehicle-specific behavior.
+## Conditions, formatters, and providers
 
----
+`vehicle_conditions.lua` supplies reusable simfphys checks such as
+`Conditions.LowFuel`, `Conditions.CheckEngine`, and the `Conditions.Gears`
+helpers. `helpers.lua` composes conditions with `And`, `Or`, and `Not`.
 
-## Text Indicators
+`formatters.lua` turns vehicle and environment state into displayable values.
+Environment values come from
+`SimfphysExtraFeatures.Providers.Environment.GetProvider()`, which selects the
+StormFox provider when available and otherwise uses a default provider.
 
-Text indicators render dynamic text.
+## Feature system
 
-Example:
-
-```lua
-{
-    getter = Formatters.GetSpeedInUnits,
-    pos = Vector(),
-    ang = Angle(),
-    font = "DashboardFont",
-    scale = 0.01
-}
-```
-
-The getter is responsible only for calculating the displayed value.
-
-Examples:
-
-* current speed
-* gear
-* temperature
-* time
-
-Vehicle files should reuse existing getters whenever possible.
-
----
-
-## Conditions
-
-Conditions are reusable state checks.
-
-Examples:
-
-```lua
-Conditions.Gears.IsDrive
-Conditions.Gears.IsReverse
-Conditions.Vehicle.HasFuel
-```
-
-Conditions are used when the same logic is required in multiple places.
-
-Example:
-
-```lua
-condition = Conditions.Gears.IsDrive
-```
-
-Complex conditions are composed using helpers:
-
-```lua
-And()
-Or()
-Not()
-```
-
-Example:
-
-```lua
-condition = And(
-    Conditions.Gears.IsNeutral,
-    Not(Conditions.Gears.IsParking)
-)
-```
-
----
-
-## Formatters
-
-Formatters convert vehicle state into display values.
-
-They should not contain rendering code.
-
-Example:
-
-```lua
-Formatters.GetSpeedInUnits(vehicle)
-```
-
-returns:
-
-```text
-120
-```
-
-while:
-
-```lua
-Formatters.GetSpeedUnits(vehicle)
-```
-
-returns:
-
-```text
-km/h
-```
-
----
-
-## Weather System
-
-Weather-dependent values are abstracted through providers.
-
-The dashboard should not directly depend on specific weather addons.
-
-Example:
-
-```lua
-Weather.GetProvider()
-```
-
-returns a provider implementing:
-
-```lua
-provider.GetTemperature()
-provider.GetTime()
-```
-
-Available providers:
-
-```text
-StormFoxProvider
-DefaultProvider
-```
-
-Fallback behavior:
-
-* use weather addon values if available
-* otherwise use default values
-
----
-
-## Features System
-
-Features are interactive vehicle actions.
-
-Examples:
-
-* open trunk
-* open hood
-* raise suspension
-* lower suspension
-
-A feature consists of:
-
-```lua
-{
-    name = "Toggle Trunk",
-
-    condition = function(veh, ply)
-        return true
-    end,
-
-    action = function(veh, ply)
-
-    end
-}
-```
-
----
-
-## Feature Registration
-
-Reusable feature definitions are registered globally:
+Reusable actions are registered once:
 
 ```lua
 Features.RegisterDefinition("trunk", {
     name = "Toggle Trunk",
-    action = function(veh)
-        veh.trunk = math.abs(1 - veh.trunk)
-    end
+    condition = function(veh, ply)
+        return veh:GetDriver() == ply
+    end,
+    action = function(veh, ply, config)
+    end,
 })
 ```
 
-The vehicle registry enables and configures the definitions it supports:
+Vehicles enable and configure those definitions in their registry entry:
 
 ```lua
-SimfphysExtraFeatures.Registry.Register("models/example/car.mdl", {
-    features = {
-        trunk = {
-            type = "animated",
-            modifiers = {}
-        }
-    }
-})
-```
-
----
-
-## Input System
-
-Input handling is separated from feature logic.
-
-Flow:
-
-```text
-Keyboard Input
-      |
-      v
-Client Input Manager
-      |
-      v
-Server Feature Request Validation
-      |
-      v
-Feature Registry
-      |
-      v
-Feature Execution
-      |
-      v
-Vehicle Action
-```
-
-This allows:
-
-* customizable key bindings
-* menu configuration
-* different control schemes
-
----
-
-## Vehicle Configuration
-
-Vehicle-specific files should only describe data.
-
-Example:
-
-```text
-vehicles/
-├── bmw_m8.lua
-├── chevrolet_zr2.lua
-└── audi_q7.lua
-```
-
-A vehicle file should contain:
-
-* model registration
-* dashboard positions
-* enabled features
-
-It should not contain:
-
-* rendering logic
-* input handling
-* state calculations
-
----
-
-## Design Principles
-
-### Data Over Code
-
-Prefer configuration:
-
-```lua
-{
-    type = "handbrake"
+features = {
+    trunk = {
+        type = "animated",
+        duration = 1.25,
+        modifiers = {},
+    },
 }
 ```
 
-over custom logic:
+The server maps button codes to feature IDs and applies the definition's
+condition against the server-side vehicle before performing the action.
 
-```lua
-if vehicle:GetHandBrakeEnabled() then
-```
+## Boundaries
 
----
+Vehicle configuration files should contain model registration, dashboard layout,
+and feature configuration. They should not contain rendering loops, input hooks,
+or server authority checks.
 
-### Reuse Existing Logic
-
-Before creating a new:
-
-* getter
-* condition
-* formatter
-
-check whether existing functionality can be reused.
-
----
-
-### Keep Modules Independent
-
-Dashboard rendering should not know about:
-
-* key bindings
-* weather implementation
-* vehicle addons
-
-Features should not know about:
-
-* dashboard rendering
-* fonts
-* sprites
-
----
-
-## Current Development Goals
-
-Priority order:
-
-1. Finish dashboard architecture
-2. Stabilize indicator types
-3. Stabilize formatter API
-4. Finish feature system
-5. Add key binding menu
-6. Prepare external addon integration
-
----
-
-## Current Non-Goals
-
-Not implemented yet:
-
-* third-party addon documentation
-* public API stability guarantees
-* workshop-facing SDK
-* automatic dashboard discovery
-
-These should be designed only after the internal architecture becomes stable.
+The public API is still unstable. Third-party integrations should register
+vehicles through `Registry.Register` and avoid modifying SEF internal tables.
