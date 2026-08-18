@@ -32,32 +32,3 @@ function Registry.SyncFeatures()
         RegisterVehicleFeatures(model, data)
     end
 end
-
---[[
-    Globals:
-        - Render Distance
-
-    Per Model:
-        - Icon Indicators[]
-        - Text Indicators[]
-
-    Per Entity Params:
-        - Units (MPH or KMH, fuel consumption probably)
-
-    Per Entity States:
-        - Engine Temperature
-
-    Sprite:
-        - position
-        - rotation
-        - scale 
-        - color
-
-    Icon Indicator:
-        - sprite
-        - condition
-
-    Text Indicator:
-        - getter
-        - delay
-]]
