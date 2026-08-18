@@ -50,21 +50,7 @@ local data = {
     },
     features = {
         ["trunk"] = {
-            type = "animated",
-            duration = 1.25,
-            easing = "ease_in_out",
-            modifiers = {
-                {
-                    type = "bone_angle",
-                    bone = "trunk",
-                    keyframes = {
-                        [0.0] = Angle(0, 0, 0),
-                        [0.2] = Angle(0, 5, 0),
-                        [0.7] = Angle(0, 40, 0),
-                        [1.0] = Angle(0, 60, 0),
-                    }
-                },
-            },
+            field = "trunk",
         },
     },
 }

@@ -5,11 +5,17 @@ local Features = SimfphysExtraFeatures.Features
 Features.RegisterDefinition("trunk", {
     name = "Toggle Trunk",
 
-    condition = function(veh, ply)
+    condition = function(veh, ply, cfg)
         return veh:GetDriver() == ply
+            and (not cfg.field or isnumber(veh[cfg.field]))
     end,
 
-    action = function(veh)
+    action = function(veh, _, cfg)
+        if cfg.field then
+            veh[cfg.field] = math.abs(1 - veh[cfg.field])
+            return
+        end
+
         local st = Features.GetFeatureState(
             veh,
             "trunk"
