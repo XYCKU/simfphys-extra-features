@@ -22,3 +22,6 @@ Types.cruise = Conditions.CruiseMode
 Types.engine_running = Conditions.EngineRunning
 Types.dashboard_enabled = Conditions.DashboardEnabled
 Types.lamps = Conditions.LampsEnabled
+Types.reverse = Conditions.Gears.IsReverse
+Types.neutral = Conditions.Gears.IsNeutral
+Types.drive = Conditions.Gears.IsDrive

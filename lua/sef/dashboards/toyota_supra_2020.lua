@@ -23,7 +23,7 @@ local data = {
     text_indicators = {
         {
             getter = GetGearText,
-            condition = Conditions.EngineRunning,
+            type = "engine_running",
             pos = Vector(18.35, 6.15, 42.8),
             ang = Angle(0, 0, 77.5),
             color = Color(255, 0, 0),
@@ -34,7 +34,7 @@ local data = {
         },
         {
             getter = Formatters.GetSpeedInUnits,
-            condition = Conditions.EngineRunning,
+            type = "engine_running",
             pos = Vector(18.35, 6.15, 42.8),
             ang = Angle(0, 0, 77.5),
             offset = { x = -300, y = 20 },
@@ -47,7 +47,7 @@ local data = {
         },
         {
             getter = Formatters.GetSpeedUnits,
-            condition = Conditions.EngineRunning,
+            type = "engine_running",
             pos = Vector(18.35, 6.15, 42.8),
             ang = Angle(0, 0, 77.5),
             offset = { x = -240, y = 35 },
@@ -60,7 +60,7 @@ local data = {
         },
         {
             getter = Formatters.GetTime,
-            condition = Conditions.EngineRunning,
+            type = "engine_running",
             pos = Vector(20.8, 6.35, 43.8),
             ang = Angle(0, 0, 77.5),
             color = Color(255, 255, 255),
@@ -71,7 +71,7 @@ local data = {
         },
         {
             getter = Formatters.GetOutsideTemperature,
-            condition = Conditions.EngineRunning,
+            type = "engine_running",
             pos = Vector(20.8, 6.35, 43.8),
             ang = Angle(0, 0, 77.5),
             offset = { x = 250, y = 0 },

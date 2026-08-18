@@ -9,22 +9,19 @@ local default_vector = Vector(0, 0, 0)
 local TextCache = setmetatable({}, { __mode = "k" })
 
 local function CheckCondition(veh, ind)
-    local condition = ind.condition
-
-    if not condition then
-        if not ind.type then
-            return true
-        end
-
-        if not Types[ind.type] then
+    if ind.type then
+        local predefined = Types[ind.type]
+        if not predefined then
             print("[SEF] Unknown indicator type:", ind.type)
-            return true
+            return false
         end
 
-        condition = Types[ind.type]
+        if not predefined(veh) then
+            return false
+        end
     end
 
-    return condition(veh)
+    return not ind.condition or ind.condition(veh)
 end
 
 local function GetTextValue(veh, indicator)

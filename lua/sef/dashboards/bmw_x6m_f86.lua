@@ -1,14 +1,14 @@
 local Formatters = SimfphysExtraFeatures.Formatters
 local Gears = SimfphysExtraFeatures.Conditions.Gears
 local Conditions = SimfphysExtraFeatures.Conditions
-local Helpers = SimfphysExtraFeatures.Helpers
 
 local data = {
     indicators = {
         -- handbrake icon
         {
             sprite = "husky_dashboard/hbrake",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.Handbrake),
+            type = "handbrake",
+            condition = Conditions.EngineRunning,
             pos = Vector(-19.18, 40.465, 59.3),
             ang = Angle(0, 0, 65.5),
             scale = 0.003,
@@ -18,7 +18,8 @@ local data = {
         -- running lights
         {
             sprite = "husky_dashboard/running",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.ParkingLights),
+            type = "parking_lights",
+            condition = Conditions.EngineRunning,
             pos = Vector(-25.55, 40.44, 59.2),
             ang = Angle(0, 0, 65.5),
             scale = 0.004,
@@ -28,7 +29,8 @@ local data = {
         -- high beam
         {
             sprite = "husky_dashboard/lamps",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.HighBeam),
+            type = "highbeam",
+            condition = Conditions.EngineRunning,
             pos = Vector(-19.9, 40.8, 60),
             ang = Angle(0, 0, 65.5),
             scale = 0.004,
@@ -38,7 +40,8 @@ local data = {
         -- fog
         {
             sprite = "husky_dashboard/fog",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.FogLights),
+            type = "fog",
+            condition = Conditions.EngineRunning,
             pos = Vector(-26.1, 40.77, 59.9),
             ang = Angle(0, 0, 65.5),
             scale = 0.007,
@@ -47,7 +50,8 @@ local data = {
         -- rear fog
         {
             sprite = "husky_dashboard/fog_rear",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.FogLights),
+            type = "fog",
+            condition = Conditions.EngineRunning,
             pos = Vector(-25.5, 40.77, 59.9),
             ang = Angle(0, 0, 65.5),
             scale = 0.007,
@@ -56,7 +60,8 @@ local data = {
         -- left turn
         {
             sprite = "husky_dashboard/turn_signal",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.LeftSignal),
+            type = "left_signal",
+            condition = Conditions.EngineRunning,
             pos = Vector(-21.074, 41.367, 61.352),
             ang = Angle(0, 0, 65.5),
             scale = 0.009,
@@ -66,7 +71,8 @@ local data = {
         -- right turn
         {
             sprite = "husky_dashboard/turn_signal",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.RightSignal),
+            type = "right_signal",
+            condition = Conditions.EngineRunning,
             pos = Vector(-17.932, 41.367, 61.302),
             ang = Angle(0, 0, 65.5),
             scale = 0.009,
@@ -99,7 +105,8 @@ local data = {
         },
         {
             getter = function(veh) return "BRAKE" end,
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.Handbrake),
+            type = "handbrake",
+            condition = Conditions.EngineRunning,
             pos = Vector(-19.37, 40.7, 59.8),
             ang = Angle(0, 0, 65.5),
             color = Color(255, 0, 0),

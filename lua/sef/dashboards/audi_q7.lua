@@ -1,6 +1,5 @@
 local model = "models/dk_cars/audi/q7/ak_47.mdl"
 local Conditions = SimfphysExtraFeatures.Conditions
-local Helpers = SimfphysExtraFeatures.Helpers
 
 SimfphysExtraFeatures.Registry.Register(model, {
     indicators = {
@@ -21,7 +20,8 @@ SimfphysExtraFeatures.Registry.Register(model, {
         },
         {
             sprite = "husky_dashboard/check",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.CheckEngine),
+            type = "check_engine",
+            condition = Conditions.EngineRunning,
             pos = Vector(-19.8, 35.6, 57.2),
             ang = Angle(0, 0, 59.5),
             scale = 0.006,
@@ -35,7 +35,8 @@ SimfphysExtraFeatures.Registry.Register(model, {
         },
         {
             sprite = "husky_dashboard/hbrake",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.Handbrake),
+            type = "handbrake",
+            condition = Conditions.EngineRunning,
             pos = Vector(-13.8, 35.12, 54.5),
             ang = Angle(0, 0, 59.5),
             scale = 0.003,

@@ -29,7 +29,8 @@ local data = {
     indicators = {
         {
             sprite = "husky_dashboard/hbrake",
-            condition = Helpers.And(DashboardActive, Conditions.Handbrake),
+            type = "handbrake",
+            condition = DashboardActive,
             pos = Vector(-15.5, 30.37, 42.7),
             ang = Angle(0, 0, 72.65),
             scale = 0.0035,
@@ -37,7 +38,8 @@ local data = {
         },
         {
             sprite = "husky_dashboard/lamps",
-            condition = Helpers.And(DashboardActive, Conditions.HighBeam),
+            type = "highbeam",
+            condition = DashboardActive,
             pos = Vector(-25.38, 29.3, 39.3),
             ang = Angle(0, 0, 72.65),
             scale = 0.008,
@@ -45,7 +47,8 @@ local data = {
         },
         {
             sprite = "husky_dashboard/lights",
-            condition = Helpers.And(DashboardActive, Conditions.LowBeam),
+            type = "lowbeam",
+            condition = DashboardActive,
             pos = Vector(-25.38, 29.3, 39.3),
             ang = Angle(0, 0, 72.65),
             scale = 0.008,
@@ -53,14 +56,16 @@ local data = {
         },
         {
             sprite = "husky_dashboard/check",
-            condition = Helpers.And(DashboardActive, Conditions.CheckEngine),
+            type = "check_engine",
+            condition = DashboardActive,
             pos = Vector(-13.7, 29.52, 40),
             ang = Angle(0, 0, 72.65),
             scale = 0.007
         },
         {
             sprite = "husky_dashboard/turn_signal",
-            condition = Helpers.And(DashboardActive, Conditions.LeftSignal),
+            type = "left_signal",
+            condition = DashboardActive,
             pos = Vector(-20.38, 30.3, 42.9),
             ang = Angle(0, 0, 72.65),
             scale = 0.007,
@@ -68,7 +73,8 @@ local data = {
         },
         {
             sprite = "husky_dashboard/turn_signal",
-            condition = Helpers.And(DashboardActive, Conditions.RightSignal),
+            type = "right_signal",
+            condition = DashboardActive,
             pos = Vector(-17.1, 30.3, 42.9),
             ang = Angle(0, 0, 72.65),
             scale = 0.007

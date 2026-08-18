@@ -2,10 +2,9 @@ local Conditions = SimfphysExtraFeatures.Conditions
 local Formatters = SimfphysExtraFeatures.Formatters
 local Helpers = SimfphysExtraFeatures.Helpers
 
-local function IsStoppedInNeutral(veh)
+local function IsStoppedWithEngineOff(veh)
     local speedMPH = veh:GetVelocity():Length() / 14.5 / 1.6
-    return Conditions.Gears.IsNeutral(veh)
-        and math.floor(speedMPH) == 0
+    return math.floor(speedMPH) == 0
         and Conditions.EngineStopped(veh)
 end
 
@@ -19,7 +18,8 @@ local data = {
             ang = Angle(0, 0, 81),
             scale = 0.0025,
             dim = { x = -64, y = -64, w = 128, h = 128 },
-            condition = Helpers.And(DashboardActive, Conditions.Gears.IsReverse)
+            type = "reverse",
+            condition = DashboardActive
         },
         {
             sprite = "husky_dashboard/square",
@@ -27,7 +27,8 @@ local data = {
             ang = Angle(0, 0, 81),
             scale = 0.0025,
             dim = { x = -64, y = -64, w = 128, h = 128 },
-            condition = Helpers.And(DashboardActive, IsStoppedInNeutral)
+            type = "neutral",
+            condition = Helpers.And(DashboardActive, IsStoppedWithEngineOff)
         },
         {
             sprite = "husky_dashboard/square",
@@ -35,7 +36,8 @@ local data = {
             ang = Angle(0, 0, 81),
             scale = 0.0025,
             dim = { x = -64, y = -64, w = 128, h = 128 },
-            condition = Helpers.And(DashboardActive, Conditions.Gears.IsNeutral, Helpers.Not(IsStoppedInNeutral))
+            type = "neutral",
+            condition = Helpers.And(DashboardActive, Helpers.Not(IsStoppedWithEngineOff))
         },
         {
             sprite = "husky_dashboard/square",
@@ -43,12 +45,14 @@ local data = {
             ang = Angle(0, 0, 81),
             scale = 0.0025,
             dim = { x = -64, y = -64, w = 128, h = 128 },
-            condition = Helpers.And(DashboardActive, Conditions.Gears.IsDrive)
+            type = "drive",
+            condition = DashboardActive
         },
 
         {
             sprite = "husky_dashboard/hbrake",
-            condition = Helpers.And(DashboardActive, Conditions.Handbrake),
+            type = "handbrake",
+            condition = DashboardActive,
             pos = Vector(-20.85, 32.83, 42.85),
             ang = Angle(0, 0, 81),
             scale = 0.0035,
@@ -56,35 +60,40 @@ local data = {
         },
         {
             sprite = "husky_dashboard/lamps",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.HighBeam),
+            type = "highbeam",
+            condition = Conditions.EngineRunning,
             pos = Vector(-16, 33.1, 45),
             ang = Angle(0, 0, 81),
             scale = 0.008
         },
         {
             sprite = "husky_dashboard/lights",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.LowBeam),
+            type = "lowbeam",
+            condition = Conditions.EngineRunning,
             pos = Vector(-16, 33.1, 45),
             ang = Angle(0, 0, 81),
             scale = 0.008
         },
         {
             sprite = "husky_dashboard/fog_rear",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.FogLights),
+            type = "fog",
+            condition = Conditions.EngineRunning,
             pos = Vector(-17, 33.1, 45),
             ang = Angle(0, 0, 81),
             scale = 0.007
         },
         {
             sprite = "husky_dashboard/check",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.CheckEngine),
+            type = "check_engine",
+            condition = Conditions.EngineRunning,
             pos = Vector(-23.2, 32.86, 43),
             ang = Angle(0, 0, 81),
             scale = 0.007
         },
         {
             sprite = "husky_dashboard/turn_signal",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.LeftSignal),
+            type = "left_signal",
+            condition = Conditions.EngineRunning,
             pos = Vector(-20.3, 33.15, 45.4),
             ang = Angle(0, 0, 81),
             scale = 0.007,
@@ -92,7 +101,8 @@ local data = {
         },
         {
             sprite = "husky_dashboard/turn_signal",
-            condition = Helpers.And(Conditions.EngineRunning, Conditions.RightSignal),
+            type = "right_signal",
+            condition = Conditions.EngineRunning,
             pos = Vector(-14.9, 33.15, 45.4),
             ang = Angle(0, 0, 81),
             scale = 0.007

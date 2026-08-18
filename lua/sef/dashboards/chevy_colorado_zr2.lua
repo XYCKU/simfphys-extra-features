@@ -42,14 +42,16 @@ local data = {
         },
         {
             sprite = "husky_dashboard/fuel_orange",
-            condition = Helpers.And(Conditions.DashboardEnabled, Conditions.LowFuel),
+            type = "low_fuel",
+            condition = Conditions.DashboardEnabled,
             pos = Vector(-20, 51.9, 61),
             ang = Angle(0, 0, 60),
             scale = 0.004
         },
         {
             sprite = "husky_dashboard/check",
-            condition = Helpers.And(Conditions.DashboardEnabled, Conditions.CheckEngine),
+            type = "check_engine",
+            condition = Conditions.DashboardEnabled,
             pos = Vector(-14.55, 50.6, 57.85),
             ang = Angle(0, 0, 60),
             scale = 0.005
@@ -59,7 +61,7 @@ local data = {
     text_indicators = {
         {
             getter = Formatters.GetSpeedInUnits,
-            condition = Conditions.DashboardEnabled,
+            type = "dashboard_enabled",
             pos = Vector(-18.5, 51.29, 59.1),
             ang = Angle(0, 0, 60),
             offset = { x = 0, y = 0 },
@@ -72,7 +74,7 @@ local data = {
         },
         {
             getter = Formatters.GetSpeedUnitsUpper,
-            condition = Conditions.DashboardEnabled,
+            type = "dashboard_enabled",
             pos = Vector(-18.5, 51.29, 59.1),
             ang = Angle(0, 0, 60),
             offset = { x = 0, y = 32 },
@@ -97,7 +99,8 @@ local data = {
         },
         {
             getter = function(veh) return "BRAKE" end,
-            condition = Helpers.And(Conditions.DashboardEnabled, Conditions.Handbrake),
+            type = "handbrake",
+            condition = Conditions.DashboardEnabled,
             pos = Vector(-15.35, 50.6, 57.85),
             ang = Angle(0, 0, 60),
             color = Color(255, 0, 0),
@@ -128,7 +131,8 @@ local data = {
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
             vertAlign = TEXT_ALIGN_CENTER,
-            condition = Helpers.And(Conditions.DashboardEnabled, Helpers.Not(Conditions.Gears.IsReverse)),
+            type = "dashboard_enabled",
+            condition = Helpers.Not(Conditions.Gears.IsReverse),
         },
         {
             getter = function() return Formatters.Gears.Reverse end,
@@ -140,7 +144,8 @@ local data = {
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
             vertAlign = TEXT_ALIGN_CENTER,
-            condition = Helpers.And(Conditions.DashboardEnabled, Conditions.Gears.IsReverse),
+            type = "reverse",
+            condition = Conditions.DashboardEnabled,
         },
         {
             getter = function() return Formatters.Gears.Neutral end,
@@ -152,7 +157,8 @@ local data = {
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
             vertAlign = TEXT_ALIGN_CENTER,
-            condition = Helpers.And(Conditions.DashboardEnabled, Helpers.Not(Conditions.Gears.IsNeutral)),
+            type = "dashboard_enabled",
+            condition = Helpers.Not(Conditions.Gears.IsNeutral),
         },
         {
             getter = function() return Formatters.Gears.Neutral end,
@@ -164,7 +170,8 @@ local data = {
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
             vertAlign = TEXT_ALIGN_CENTER,
-            condition = Helpers.And(Conditions.DashboardEnabled, Conditions.Gears.IsNeutral)
+            type = "neutral",
+            condition = Conditions.DashboardEnabled
         },
         {
             getter = function() return Formatters.Gears.Drive end,
@@ -176,7 +183,8 @@ local data = {
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
             vertAlign = TEXT_ALIGN_CENTER,
-            condition = Helpers.And(Conditions.DashboardEnabled, Helpers.Not(Conditions.Gears.IsDrive)),
+            type = "dashboard_enabled",
+            condition = Helpers.Not(Conditions.Gears.IsDrive),
         },
         {
             getter = function() return Formatters.Gears.Drive end,
@@ -188,7 +196,8 @@ local data = {
             font = "HUSKY_chevy_zr2",
             horAlign = TEXT_ALIGN_CENTER,
             vertAlign = TEXT_ALIGN_CENTER,
-            condition = Helpers.And(Conditions.DashboardEnabled, Conditions.Gears.IsDrive),
+            type = "drive",
+            condition = Conditions.DashboardEnabled,
         },
         {
             getter = function() return Formatters.Gears.Low end,
