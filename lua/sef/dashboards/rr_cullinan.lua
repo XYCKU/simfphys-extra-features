@@ -1,5 +1,5 @@
-local Formatters = SimfphysExtraFeatures.Formatters
-local Gears = SimfphysExtraFeatures.Conditions.Gears
+local Conditions = SimfphysExtraFeatures.Conditions
+local Helpers = SimfphysExtraFeatures.Helpers
 
 local data = {
     indicators = {
@@ -36,7 +36,7 @@ local data = {
         },
         {
             sprite = "husky_dashboard/hbrake",
-            type = "handbrake",
+            condition = Helpers.And(Conditions.EngineRunning, Conditions.Handbrake),
             pos = Vector(-10.6, 37.96, 61.6),
             ang = Angle(0, 0, 70),
             scale = 0.003,
@@ -44,7 +44,7 @@ local data = {
         },
         {
             sprite = "husky_dashboard/check",
-            type = "check_engine",
+            condition = Helpers.And(Conditions.EngineRunning, Conditions.CheckEngine),
             pos = Vector(-26.2, 38.6, 63),
             ang = Angle(0, 0, 70),
             scale = 0.006,
