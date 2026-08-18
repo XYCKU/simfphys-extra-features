@@ -90,7 +90,12 @@ function Formatters.GetOutsideTemperatureShort()
 end
 
 function Formatters.GetTime()
-    return os.date("%H:%M")
+    local provider = Environment.GetProvider()
+    local minutes = provider.GetTime()
+    local hours = math.floor(minutes / 60)
+    local remainingMinutes = minutes % 60
+
+    return string.format("%02d:%02d", hours, remainingMinutes)
 end
 
 function Formatters.SpeedUnitToUpperString(unit)
