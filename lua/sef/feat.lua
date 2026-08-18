@@ -45,19 +45,34 @@ Features.RegisterDefinition("hood", {
     end
 })
 
+local MinSuspensionHeight = -0.4
+local MaxSuspensionHeight = 0
+local SuspensionStep = 0.1
+
+local function AdjustSuspensionHeight(veh, amount)
+    local front = veh:GetFrontSuspensionHeight()
+    local rear = veh:GetRearSuspensionHeight()
+    local newFront = math.Clamp(front + amount, MinSuspensionHeight, MaxSuspensionHeight)
+    local newRear = math.Clamp(rear + amount, MinSuspensionHeight, MaxSuspensionHeight)
+
+    if newFront ~= front then
+        veh:SetFrontSuspensionHeight(newFront)
+    end
+
+    if newRear ~= rear then
+        veh:SetRearSuspensionHeight(newRear)
+    end
+end
+
 Features.RegisterDefinition("air_up", {
     name = "Raise Suspension",
 
     condition = function(veh, ply)
-        return veh:GetDriver() == ply and veh.HasAirSuspension
+        return veh:GetDriver() == ply
     end,
 
     action = function(veh)
-        local h = veh:GetFrontSuspensionHeight()
-        if h < 0 then
-            veh:SetFrontSuspensionHeight(h + 0.1)
-            veh:SetRearSuspensionHeight(h + 0.1)
-        end
+        AdjustSuspensionHeight(veh, SuspensionStep)
     end
 })
 
@@ -65,15 +80,11 @@ Features.RegisterDefinition("air_down", {
     name = "Lower Suspension",
 
     condition = function(veh, ply)
-        return veh:GetDriver() == ply and veh.HasAirSuspension
+        return veh:GetDriver() == ply
     end,
 
     action = function(veh)
-        local h = veh:GetFrontSuspensionHeight()
-        if h > -0.4 then
-            veh:SetFrontSuspensionHeight(h - 0.1)
-            veh:SetRearSuspensionHeight(h - 0.1)
-        end
+        AdjustSuspensionHeight(veh, -SuspensionStep)
     end
 })
 
@@ -84,33 +95,13 @@ local Keybinds = {
     [KEY_L] = "air_down",
 }
 
-local NetMessage = "SEF_RequestFeature"
-local AllowedFeatures = {}
-
-for _, feature_id in pairs(Keybinds) do
-    AllowedFeatures[feature_id] = true
-end
-
 if SERVER then
-    util.AddNetworkString(NetMessage)
-
-    net.Receive(NetMessage, function(_, ply)
-        local feature_id = net.ReadString()
-        if not AllowedFeatures[feature_id] then return end
-
-        Features.Execute(feature_id, ply)
-    end)
-end
-
-if CLIENT then
-    local function ProcessInput(_, button)
+    local function ProcessInput(ply, button)
         local feature_id = Keybinds[button]
         if not feature_id then return end
 
-        net.Start(NetMessage)
-        net.WriteString(feature_id)
-        net.SendToServer()
+        Features.Execute(feature_id, ply)
     end
 
-    hook.Add("PlayerButtonUp", "SEF_Features", ProcessInput)
+    hook.Add("PlayerButtonDown", "SEF_Features", ProcessInput)
 end

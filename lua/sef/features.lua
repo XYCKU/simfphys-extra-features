@@ -271,6 +271,8 @@ Features.Types["animated"] = {
 
 function Features.Execute(feature_id, ply, extra)
     if not SERVER then return end
+    if not IsValid(ply) then return end
+    if not ply.GetSimfphys then return end
 
     local definition = Features.GetDefinition(feature_id)
     if not definition then return end
@@ -332,10 +334,6 @@ function Features.TickVehicle(veh, dt)
         ActiveVehicles[veh] = nil
     end
 end
-
---========================================================--
---  GLOBAL TICK
---========================================================--
 
 if SERVER then
     hook.Add("Think", "SEF_FeaturesTick", function()
