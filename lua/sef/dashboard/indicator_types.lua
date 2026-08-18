@@ -19,3 +19,6 @@ Types.handbrake = Conditions.Handbrake
 Types.low_fuel = Conditions.LowFuel
 Types.check_engine = Conditions.CheckEngine
 Types.cruise = Conditions.CruiseMode
+Types.engine_running = Conditions.EngineRunning
+Types.dashboard_enabled = Conditions.DashboardEnabled
+Types.lamps = Conditions.LampsEnabled

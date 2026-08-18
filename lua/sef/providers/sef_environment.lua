@@ -16,6 +16,10 @@ local Environment = SimfphysExtraFeatures.Providers.Environment
 local DefaultProviderImpl = {}
 
 function DefaultProviderImpl.GetTemperature()
+    if DefaultProviderImpl.GetTempUnit() == TempUnits.Fahrenheit then
+        return 76
+    end
+
     return 24
 end
 
@@ -34,7 +38,8 @@ end
 local StormFoxProviderImpl = {}
 
 function StormFoxProviderImpl.GetTemperature()
-    return StormFox.GetTemperature()
+    local fahrenheit = StormFoxProviderImpl.GetTempUnit() == TempUnits.Fahrenheit
+    return StormFox.GetTemperature(fahrenheit)
 end
 
 function StormFoxProviderImpl.GetTempUnit()

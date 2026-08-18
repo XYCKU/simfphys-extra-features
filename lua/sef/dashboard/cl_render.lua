@@ -6,6 +6,7 @@ local Types = SimfphysExtraFeatures.Dashboard.PredefinedIndicators
 local Registry = SimfphysExtraFeatures.Registry
 
 local default_vector = Vector(0, 0, 0)
+local TextCache = setmetatable({}, { __mode = "k" })
 
 local function CheckCondition(veh, ind)
     local condition = ind.condition
@@ -24,6 +25,33 @@ local function CheckCondition(veh, ind)
     end
 
     return condition(veh)
+end
+
+local function GetTextValue(veh, indicator)
+    if not indicator.delay then
+        return indicator.getter(veh)
+    end
+
+    local vehicleCache = TextCache[veh]
+    if not vehicleCache then
+        vehicleCache = {}
+        TextCache[veh] = vehicleCache
+    end
+
+    local cached = vehicleCache[indicator]
+    local now = CurTime()
+
+    if not cached then
+        cached = {}
+        vehicleCache[indicator] = cached
+    end
+
+    if cached.nextUpdate == nil or now >= cached.nextUpdate then
+        cached.value = indicator.getter(veh)
+        cached.nextUpdate = now + indicator.delay
+    end
+
+    return cached.value
 end
 
 local function DrawVehicleDashboardIndicators(veh, indicators)
@@ -75,7 +103,7 @@ local function DrawVehicleDashboardTexts(veh, texts)
 
         indicator.offset = indicator.offset or default_vector
         draw.SimpleText(
-            indicator.getter(veh), 
+            GetTextValue(veh, indicator),
             indicator.font, 
             indicator.offset.x, 
             indicator.offset.y, 
