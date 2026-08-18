@@ -11,16 +11,18 @@ the reusable behavior.
 `lua/autorun/sef_init.lua` is the single loader manifest.
 
 - Add shared modules to `SharedFiles`.
+- Add server-only modules to `ServerFiles`.
 - Add client-only modules to `ClientFiles`.
 - Add built-in vehicle registrations to `VehicleConfigFiles`.
 
-The server sends all manifest files to clients. Client rendering belongs in
+The server sends shared, client-only, and vehicle configuration files to
+clients. Server-only files remain server-side. Client rendering belongs in
 client-only modules. Feature key handling, execution, and animation ticking
 belong on the server.
 
 ## Add a dashboard
 
-Create `lua/sef/dashboards/<vehicle>.lua`, add it to `VehicleConfigFiles`, and
+Create `lua/sef/vehicles/<vehicle>.lua`, add it to `VehicleConfigFiles`, and
 register its complete configuration once.
 
 ```lua
@@ -46,8 +48,8 @@ new one. Do not add per-vehicle rendering code.
 
 ## Add a feature
 
-Register a reusable definition in `feat.lua` or a dedicated shared feature
-module:
+Register a reusable definition in `features/definitions.lua` or a dedicated
+shared feature module:
 
 ```lua
 Features.RegisterDefinition("feature_id", {
@@ -69,7 +71,7 @@ features = {
 ```
 
 Do not execute a feature from client code. The server maps key presses to
-feature IDs, validates them, and executes the action.
+feature IDs in `features/sv_input.lua`, validates them, and executes the action.
 
 ## Verify changes
 

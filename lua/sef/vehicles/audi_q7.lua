@@ -1,7 +1,8 @@
 local model = "models/dk_cars/audi/q7/ak_47.mdl"
 local Conditions = SimfphysExtraFeatures.Conditions
+local Registry = SimfphysExtraFeatures.Registry
 
-SimfphysExtraFeatures.Registry.Register(model, {
+Registry.Register(model, {
     indicators = {
         {
             sprite = "husky_dashboard/turn_signal",

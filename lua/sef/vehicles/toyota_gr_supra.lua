@@ -1,5 +1,6 @@
 local Formatters = SimfphysExtraFeatures.Formatters
 local Conditions = SimfphysExtraFeatures.Conditions
+local Registry = SimfphysExtraFeatures.Registry
 
 local function GetGearText(veh)
     if Conditions.Gears.IsReverse(veh) then
@@ -84,4 +85,4 @@ local data = {
     }
 }
 
-SimfphysExtraFeatures.Registry.Register("models/ctvehicles/toyota/gr_supra.mdl", data)
+Registry.Register("models/ctvehicles/toyota/gr_supra.mdl", data)

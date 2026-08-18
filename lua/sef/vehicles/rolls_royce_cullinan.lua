@@ -1,4 +1,5 @@
 local Conditions = SimfphysExtraFeatures.Conditions
+local Registry = SimfphysExtraFeatures.Registry
 
 local data = {
     indicators = {
@@ -53,4 +54,4 @@ local data = {
     }
 }
 
-SimfphysExtraFeatures.Registry.Register("models/ctvehicles/rolls_royce/cullinan.mdl", data)
+Registry.Register("models/ctvehicles/rolls_royce/cullinan.mdl", data)

@@ -1,7 +1,7 @@
-local ActiveVehicles = SimfphysExtraFeatures.ActiveVehicles
-
-local Config = SimfphysExtraFeatures.Dashboard.Config
-local Types = SimfphysExtraFeatures.Dashboard.PredefinedIndicators
+local Dashboard = SimfphysExtraFeatures.Dashboard
+local Config = Dashboard.Config
+local Types = Dashboard.PredefinedIndicators
+local VehicleCache = Dashboard.VehicleCache
 
 local Registry = SimfphysExtraFeatures.Registry
 
@@ -113,12 +113,12 @@ local function DrawVehicleDashboardTexts(veh, texts)
     end
 end
 
-local function DrawDashboard_v1()
+local function DrawDashboards()
     local ply = LocalPlayer()
     local plyPos = ply:GetPos()
     local renderDistance = Config.RenderDistance
     local renderDistanceSqr = renderDistance * renderDistance
-    for veh in pairs(ActiveVehicles:Get()) do
+    for veh in pairs(VehicleCache.Get()) do
         if not IsValid(veh) then continue end
 
         if plyPos:DistToSqr(veh:GetPos()) > renderDistanceSqr then
@@ -138,4 +138,4 @@ local function DrawDashboard_v1()
     end
 end
 
-hook.Add("PostDrawTranslucentRenderables", "SEF_Dashboard", DrawDashboard_v1)
+hook.Add("PostDrawTranslucentRenderables", "SEF_Dashboard", DrawDashboards)

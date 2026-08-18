@@ -1,4 +1,5 @@
 local Conditions = SimfphysExtraFeatures.Conditions
+local Registry = SimfphysExtraFeatures.Registry
 
 local data = {
     indicators = {
@@ -59,4 +60,4 @@ local data = {
 
 local model = "models/tdmcars/emergency/for_crownvic_fh3.mdl"
 
-SimfphysExtraFeatures.Registry.Register(model, data)
+Registry.Register(model, data)

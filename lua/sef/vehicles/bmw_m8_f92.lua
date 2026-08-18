@@ -1,6 +1,7 @@
 local Formatters = SimfphysExtraFeatures.Formatters
 local Conditions = SimfphysExtraFeatures.Conditions
 local Helpers = SimfphysExtraFeatures.Helpers
+local Registry = SimfphysExtraFeatures.Registry
 
 local DashboardActive = Helpers.Or(
     Conditions.EngineRunning,
@@ -146,4 +147,4 @@ local data = {
     }
 }
 
-SimfphysExtraFeatures.Registry.Register("models/ctvehicles/bmw/m8_f92.mdl", data)
+Registry.Register("models/ctvehicles/bmw/m8_f92.mdl", data)

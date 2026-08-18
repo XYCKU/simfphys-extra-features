@@ -1,4 +1,3 @@
-local Conditions = SimfphysExtraFeatures.Conditions
 local Features = SimfphysExtraFeatures.Features
 
 
@@ -93,21 +92,3 @@ Features.RegisterDefinition("air_down", {
         AdjustSuspensionHeight(veh, -SuspensionStep)
     end
 })
-
-local Keybinds = {
-    [KEY_G] = "trunk",
-    [KEY_H] = "hood",
-    [KEY_O] = "air_up",
-    [KEY_L] = "air_down",
-}
-
-if SERVER then
-    local function ProcessInput(ply, button)
-        local feature_id = Keybinds[button]
-        if not feature_id then return end
-
-        Features.Execute(feature_id, ply)
-    end
-
-    hook.Add("PlayerButtonDown", "SEF_Features", ProcessInput)
-end

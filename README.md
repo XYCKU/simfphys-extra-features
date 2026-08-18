@@ -67,7 +67,8 @@ Vehicle interaction framework supporting actions such as:
 * Opening hood
 * Air suspension controls
 
-The feature system is currently under active development and will later include configurable key bindings.
+The feature system currently uses server-side key bindings for its built-in
+actions. Making those bindings configurable remains planned work.
 
 ### Weather Abstraction
 

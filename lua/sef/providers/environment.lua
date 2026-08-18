@@ -11,7 +11,7 @@ SimfphysExtraFeatures.Units.Temperature = SimfphysExtraFeatures.Units.Temperatur
 }
 
 local TempUnits = SimfphysExtraFeatures.Units.Temperature
-local Environment = SimfphysExtraFeatures.Providers.Environment
+local EnvironmentProvider = SimfphysExtraFeatures.Providers.Environment
 
 local DefaultProviderImpl = {}
 
@@ -50,7 +50,7 @@ function StormFoxProviderImpl.GetTime()
     return StormFox.GetTime(true)
 end
 
-function Environment.GetProvider()
+function EnvironmentProvider.GetProvider()
     if StormFox then
         return StormFoxProviderImpl
     end

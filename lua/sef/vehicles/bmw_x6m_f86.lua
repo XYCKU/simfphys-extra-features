@@ -1,6 +1,7 @@
 local Formatters = SimfphysExtraFeatures.Formatters
 local Gears = SimfphysExtraFeatures.Conditions.Gears
 local Conditions = SimfphysExtraFeatures.Conditions
+local Registry = SimfphysExtraFeatures.Registry
 
 local data = {
     indicators = {
@@ -118,5 +119,5 @@ local data = {
     },
 }
 
-SimfphysExtraFeatures.Registry.Register("models/crsk_autos/bmw/x6m_f86_2015.mdl", data)
-SimfphysExtraFeatures.Registry.Register("models/crsk_autos/bmw/x6m_f86_2015_black.mdl", data)
+Registry.Register("models/crsk_autos/bmw/x6m_f86_2015.mdl", data)
+Registry.Register("models/crsk_autos/bmw/x6m_f86_2015_black.mdl", data)

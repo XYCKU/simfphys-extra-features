@@ -1,7 +1,3 @@
---========================================================--
---  simfphys_extra_features/lua/autorun/sh_features.lua
---========================================================--
-
 SimfphysExtraFeatures = SimfphysExtraFeatures or {}
 SimfphysExtraFeatures.Features = SimfphysExtraFeatures.Features or {}
 
@@ -12,7 +8,7 @@ Features.Configs = Features.Configs or {}
 Features.Types = Features.Types or {}
 Features.Modifiers = Features.Modifiers or {}
 
-local ActiveVehicles = {}
+local AnimatingVehicles = {}
 
 --========================================================--
 --  FEATURE DEFINITIONS
@@ -72,7 +68,7 @@ end
 --========================================================--
 
 function Features.MarkVehicleActive(veh)
-    ActiveVehicles[veh] = true
+    AnimatingVehicles[veh] = true
 end
 
 --========================================================--
@@ -331,7 +327,7 @@ function Features.TickVehicle(veh, dt)
     end
 
     if not hasActive then
-        ActiveVehicles[veh] = nil
+        AnimatingVehicles[veh] = nil
     end
 end
 
@@ -339,9 +335,9 @@ if SERVER then
     hook.Add("Think", "SEF_FeaturesTick", function()
         local dt = FrameTime()
 
-        for veh in pairs(ActiveVehicles) do
+        for veh in pairs(AnimatingVehicles) do
             if not IsValid(veh) then
-                ActiveVehicles[veh] = nil
+                AnimatingVehicles[veh] = nil
                 continue
             end
 

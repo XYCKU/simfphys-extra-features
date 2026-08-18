@@ -1,5 +1,4 @@
-if CLIENT then
-    surface.CreateFont( "HUSKY_BMW_M8", {
+surface.CreateFont( "HUSKY_BMW_M8", {
 		font = "Arial Black",
 		size = 170,
 		weight = 600,
@@ -108,5 +107,4 @@ if CLIENT then
 		weight = 400,
 		scanlines = 1,
 		antialias = true,
-    })
-end
+	})

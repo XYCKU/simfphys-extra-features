@@ -7,30 +7,35 @@ SimfphysExtraFeatures.Dashboard.Config = {
 
 local SharedFiles = {
     "sef/vehicle_conditions.lua",
-    "sef/sef_active_vehicles.lua",
     "sef/registry.lua",
-    "sef/features.lua",
-    "sef/feat.lua",
+    "sef/features/core.lua",
+    "sef/features/definitions.lua",
     "sef/helpers.lua",
     "sef/dashboard/indicator_types.lua",
-    "sef/providers/sef_environment.lua",
-    "sef/providers/sef_speedometer.lua",
+    "sef/providers/environment.lua",
+    "sef/providers/speed.lua",
     "sef/formatters.lua",
 }
 
+local ServerFiles = {
+    "sef/features/sv_input.lua",
+}
+
 local ClientFiles = {
-    "sef/dashboard/cl_render.lua",
+    "sef/dashboard/cl_fonts.lua",
+    "sef/dashboard/cl_vehicle_cache.lua",
+    "sef/dashboard/cl_renderer.lua",
 }
 
 local VehicleConfigFiles = {
-    "sef/dashboards/audi_q7.lua",
-    "sef/dashboards/bmw_m8_f92.lua",
-    "sef/dashboards/bmw_x6m_f86.lua",
-    "sef/dashboards/chevy_colorado_zr2.lua",
-    "sef/dashboards/ford_cv_fh3.lua",
-    "sef/dashboards/mercedes_gt63_s.lua",
-    "sef/dashboards/rr_cullinan.lua",
-    "sef/dashboards/toyota_supra_2020.lua",
+    "sef/vehicles/audi_q7.lua",
+    "sef/vehicles/bmw_m8_f92.lua",
+    "sef/vehicles/bmw_x6m_f86.lua",
+    "sef/vehicles/chevrolet_colorado_zr2.lua",
+    "sef/vehicles/ford_crown_victoria_fh3.lua",
+    "sef/vehicles/mercedes_benz_gt63s_2018.lua",
+    "sef/vehicles/rolls_royce_cullinan.lua",
+    "sef/vehicles/toyota_gr_supra.lua",
 }
 
 local function IncludeAll(files)
@@ -49,6 +54,7 @@ if SERVER then
     end
 
     IncludeAll(SharedFiles)
+    IncludeAll(ServerFiles)
     SimfphysExtraFeatures.Registry.SyncFeatures()
     IncludeAll(VehicleConfigFiles)
 end

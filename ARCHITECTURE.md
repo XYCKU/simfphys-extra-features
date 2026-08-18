@@ -9,11 +9,12 @@ only the model-specific configuration.
 
 ## Runtime and realms
 
-`lua/autorun/sef_init.lua` is the entry point. It keeps one manifest for shared
-modules, client-only modules, and vehicle configuration files.
+`lua/autorun/sef_init.lua` is the entry point. It keeps manifests for shared,
+server-only, and client-only modules, plus vehicle configuration files.
 
 - Shared modules are sent to clients and included in both realms.
-- `sef/dashboard/cl_render.lua` is sent to clients and included only client-side.
+- Server-only modules handle authoritative feature input.
+- Dashboard fonts, the vehicle cache, and rendering are client-only.
 - The server handles feature key presses, resolves the player's simfphys
   vehicle, executes the action, and advances active feature animations.
 
@@ -30,16 +31,19 @@ lua/
     |-- vehicle_conditions.lua
     |-- helpers.lua
     |-- formatters.lua
-    |-- sef_active_vehicles.lua
-    |-- features.lua
-    |-- feat.lua
     |-- dashboard/
-    |   |-- cl_render.lua
-    |   `-- indicator_types.lua
+    |   |-- indicator_types.lua
+    |   |-- cl_fonts.lua
+    |   |-- cl_vehicle_cache.lua
+    |   `-- cl_renderer.lua
+    |-- features/
+    |   |-- core.lua
+    |   |-- definitions.lua
+    |   `-- sv_input.lua
     |-- providers/
-    |   |-- sef_environment.lua
-    |   `-- sef_speedometer.lua
-    `-- dashboards/
+    |   |-- environment.lua
+    |   `-- speed.lua
+    `-- vehicles/
         `-- <vehicle>.lua
 ```
 
@@ -66,8 +70,9 @@ The client renderer retrieves a vehicle's registry entry by model and renders
 its `indicators` and `text_indicators` while the vehicle is within the configured
 render distance.
 
-Indicator entries contain a material path, position, angle, scale, and either a
-predefined `type` or custom `condition`.
+Indicator entries contain a material path, position, angle, scale, a predefined
+`type`, and optionally a custom `condition`. When both are present, the renderer
+requires both checks to pass.
 
 ```lua
 {

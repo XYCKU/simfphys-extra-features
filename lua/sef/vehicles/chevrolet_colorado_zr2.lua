@@ -1,6 +1,7 @@
 local Conditions = SimfphysExtraFeatures.Conditions
 local Formatters = SimfphysExtraFeatures.Formatters
 local Helpers = SimfphysExtraFeatures.Helpers
+local Registry = SimfphysExtraFeatures.Registry
 
 local data = {
     indicators = {
@@ -214,4 +215,4 @@ local data = {
     }
 }
 
-SimfphysExtraFeatures.Registry.Register("models/ctvehicles/chevrolet/colorado_zr2.mdl", data)
+Registry.Register("models/ctvehicles/chevrolet/colorado_zr2.mdl", data)
