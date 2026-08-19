@@ -22,6 +22,7 @@ local ServerFiles = {
 }
 
 local ClientFiles = {
+    "sef/features/cl_keybindings.lua",
     "sef/dashboard/cl_fonts.lua",
     "sef/dashboard/cl_vehicle_cache.lua",
     "sef/dashboard/cl_renderer.lua",

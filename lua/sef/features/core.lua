@@ -16,12 +16,38 @@ local AnimatingVehicles = {}
 
 function Features.RegisterDefinition(id, data)
     data.id = id
+    data.category = data.category or "General"
+    data.bindings = data.bindings or {
+        {
+            id = "activate",
+            default = KEY_NONE,
+        },
+    }
 
     Features.Definitions[id] = data
 end
 
 function Features.GetDefinition(id)
     return Features.Definitions[id]
+end
+
+function Features.GetDefinitions()
+    return Features.Definitions
+end
+
+function Features.GetBinding(feature_id, binding_id)
+    local definition = Features.GetDefinition(feature_id)
+    if not definition then return end
+
+    for _, binding in ipairs(definition.bindings) do
+        if binding.id == binding_id then
+            return binding
+        end
+    end
+end
+
+function Features.GetBindingConVarName(feature_id, binding_id)
+    return "sef_keybind_v2_" .. feature_id .. "_" .. binding_id
 end
 
 --========================================================--

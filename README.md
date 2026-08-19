@@ -67,8 +67,9 @@ Vehicle interaction framework supporting actions such as:
 * Opening hood
 * Air suspension controls
 
-The feature system currently uses server-side key bindings for its built-in
-actions. Making those bindings configurable remains planned work.
+The feature system uses server-authoritative, player-configurable key bindings
+for its built-in actions. Configure them in **Spawnmenu > Vehicles > SEF
+Keybindings**.
 
 ### Weather Abstraction
 
