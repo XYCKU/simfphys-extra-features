@@ -1,0 +1,18 @@
+{
+  "title": "Simfphys Extra Features",
+  "type": "ServerContent",
+  "tags": [
+    "realism",
+    "build"
+  ],
+  "ignore": [
+    ".git/*",
+    ".agents/*",
+    ".github/*",
+    ".worktrees/*",
+    "artifacts/*",
+    "scripts/*",
+    "old/*",
+    "*.md"
+  ]
+}

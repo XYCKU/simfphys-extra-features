@@ -98,3 +98,21 @@ Before committing:
 
 The configuration API is not stable yet, so update this document and
 `ARCHITECTURE.md` when its contract changes.
+
+## Build a Workshop package
+
+The committed `addon.json` defines the Workshop metadata. Packaging stages only
+the addon folders (`lua`, `materials`, and `resource`), so development files
+cannot enter the `.gma`.
+
+From PowerShell, run:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\package.ps1 `
+    -GmodDirectory "D:\Games\steamapps\common\GarrysMod"
+```
+
+The script invokes that installation's `bin\gmad.exe` and writes the package
+and its SHA-256 checksum to `artifacts/`. It does not publish to the Workshop.
+Publishing and its required 512x512 JPEG icon are intentionally handled by the
+separate release workflow.
