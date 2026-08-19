@@ -1,17 +1,17 @@
 local Features = SimfphysExtraFeatures.Features
 
 local Keybinds = {
-    [KEY_G] = "trunk",
-    [KEY_H] = "hood",
-    [KEY_O] = "air_up",
-    [KEY_L] = "air_down",
+    [KEY_G] = { id = "trunk" },
+    [KEY_H] = { id = "hood" },
+    [KEY_O] = { id = "air_suspension", direction = 1 },
+    [KEY_L] = { id = "air_suspension", direction = -1 },
 }
 
 local function ProcessInput(ply, button)
-    local featureId = Keybinds[button]
-    if not featureId then return end
+    local keybind = Keybinds[button]
+    if not keybind then return end
 
-    Features.Execute(featureId, ply)
+    Features.Execute(keybind.id, ply, keybind.direction)
 end
 
 hook.Add("PlayerButtonDown", "SEF_Features", ProcessInput)

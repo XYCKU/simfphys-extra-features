@@ -50,45 +50,62 @@ Features.RegisterDefinition("hood", {
     end
 })
 
-local MinSuspensionHeight = -0.4
-local MaxSuspensionHeight = 0
-local SuspensionStep = 0.1
+local function SetSuspensionHeight(veh, state, level)
+    veh:SetFrontSuspensionHeight(state.defaultFrontHeight + level)
+    veh:SetRearSuspensionHeight(state.defaultRearHeight + level)
+end
 
-local function AdjustSuspensionHeight(veh, amount)
-    local front = veh:GetFrontSuspensionHeight()
-    local rear = veh:GetRearSuspensionHeight()
-    local newFront = math.Clamp(front + amount, MinSuspensionHeight, MaxSuspensionHeight)
-    local newRear = math.Clamp(rear + amount, MinSuspensionHeight, MaxSuspensionHeight)
+local function GetDefaultSuspensionLevel(levels)
+    if not levels then return end
 
-    if newFront ~= front then
-        veh:SetFrontSuspensionHeight(newFront)
-    end
-
-    if newRear ~= rear then
-        veh:SetRearSuspensionHeight(newRear)
+    for index, height in ipairs(levels) do
+        if height == 0 then
+            return index
+        end
     end
 end
 
-Features.RegisterDefinition("air_up", {
-    name = "Raise Suspension",
+Features.RegisterDefinition("air_suspension", {
+    name = "Adjust Air Suspension",
 
     condition = function(veh, ply)
         return veh:GetDriver() == ply
     end,
 
-    action = function(veh)
-        AdjustSuspensionHeight(veh, SuspensionStep)
-    end
-})
+    action = function(veh, ply, config, direction)
+        if direction ~= 1 and direction ~= -1 then return end
 
-Features.RegisterDefinition("air_down", {
-    name = "Lower Suspension",
+        local state = Features.GetFeatureState(veh, "air_suspension")
+        local levelIndex = state.levelIndex
 
-    condition = function(veh, ply)
-        return veh:GetDriver() == ply
-    end,
+        if not levelIndex then
+            levelIndex = GetDefaultSuspensionLevel(config.levels)
+            if not levelIndex then
+                if not state.invalidConfig then
+                    ply:ChatPrint("[SEF] Air suspension config error: levels must contain 0.0.")
+                    print("[SEF] air_suspension requires a levels array containing 0.0 for:", veh:GetModel())
+                    state.invalidConfig = true
+                end
 
-    action = function(veh)
-        AdjustSuspensionHeight(veh, -SuspensionStep)
+                return
+            end
+
+            state.levelIndex = levelIndex
+            state.defaultFrontHeight = veh:GetFrontSuspensionHeight()
+            state.defaultRearHeight = veh:GetRearSuspensionHeight()
+        end
+
+        local nextIndex = math.Clamp(
+            levelIndex + direction,
+            1,
+            #config.levels
+        )
+
+        if nextIndex == levelIndex then
+            return
+        end
+
+        state.levelIndex = nextIndex
+        SetSuspensionHeight(veh, state, config.levels[nextIndex])
     end
 })

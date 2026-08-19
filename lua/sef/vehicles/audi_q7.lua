@@ -1,6 +1,9 @@
 local model = "models/dk_cars/audi/q7/ak_47.mdl"
 local Conditions = SimfphysExtraFeatures.Conditions
 local Registry = SimfphysExtraFeatures.Registry
+local AirSuspension = {
+    levels = { -0.2, -0.1, 0.0, 0.1, 0.2 },
+}
 
 Registry.Register(model, {
     indicators = {
@@ -51,7 +54,6 @@ Registry.Register(model, {
     },
     features = {
         hood = {},
-        air_up = {},
-        air_down = {},
+        air_suspension = AirSuspension,
     },
 })

@@ -70,6 +70,19 @@ features = {
 }
 ```
 
+Air-suspension features use one `air_suspension` entry. The built-in controls
+pass a raise or lower direction to the same feature. Configure discrete height
+offsets in low-to-high order; the array must contain `0.0`, which preserves the
+vehicle's spawned suspension height and is the default starting level.
+
+```lua
+features = {
+    air_suspension = {
+        levels = { -0.4, -0.2, 0.0, 0.1, 0.5 },
+    },
+}
+```
+
 Do not execute a feature from client code. The server maps key presses to
 feature IDs in `features/sv_input.lua`, validates them, and executes the action.
 
