@@ -1,29 +1,54 @@
-local ActiveVehicles = SimfphysExtraFeatures.ActiveVehicles
-
-local Config = SimfphysExtraFeatures.Dashboard.Config
-local Types = SimfphysExtraFeatures.Dashboard.PredefinedIndicators
+local Dashboard = SimfphysExtraFeatures.Dashboard
+local Config = Dashboard.Config
+local Types = Dashboard.PredefinedIndicators
+local VehicleCache = Dashboard.VehicleCache
 
 local Registry = SimfphysExtraFeatures.Registry
 
 local default_vector = Vector(0, 0, 0)
+local TextCache = setmetatable({}, { __mode = "k" })
 
 local function CheckCondition(veh, ind)
-    local condition = ind.condition
-
-    if not condition then
-        if not ind.type then
-            return true
-        end
-
-        if not Types[ind.type] then
+    if ind.type then
+        local predefined = Types[ind.type]
+        if not predefined then
             print("[SEF] Unknown indicator type:", ind.type)
-            return true
+            return false
         end
 
-        condition = Types[ind.type]
+        if not predefined(veh) then
+            return false
+        end
     end
 
-    return condition(veh)
+    return not ind.condition or ind.condition(veh)
+end
+
+local function GetTextValue(veh, indicator)
+    if not indicator.delay then
+        return indicator.getter(veh)
+    end
+
+    local vehicleCache = TextCache[veh]
+    if not vehicleCache then
+        vehicleCache = {}
+        TextCache[veh] = vehicleCache
+    end
+
+    local cached = vehicleCache[indicator]
+    local now = CurTime()
+
+    if not cached then
+        cached = {}
+        vehicleCache[indicator] = cached
+    end
+
+    if cached.nextUpdate == nil or now >= cached.nextUpdate then
+        cached.value = indicator.getter(veh)
+        cached.nextUpdate = now + indicator.delay
+    end
+
+    return cached.value
 end
 
 local function DrawVehicleDashboardIndicators(veh, indicators)
@@ -75,7 +100,7 @@ local function DrawVehicleDashboardTexts(veh, texts)
 
         indicator.offset = indicator.offset or default_vector
         draw.SimpleText(
-            indicator.getter(veh), 
+            GetTextValue(veh, indicator),
             indicator.font, 
             indicator.offset.x, 
             indicator.offset.y, 
@@ -88,12 +113,12 @@ local function DrawVehicleDashboardTexts(veh, texts)
     end
 end
 
-local function DrawDashboard_v1()
+local function DrawDashboards()
     local ply = LocalPlayer()
     local plyPos = ply:GetPos()
     local renderDistance = Config.RenderDistance
     local renderDistanceSqr = renderDistance * renderDistance
-    for veh in pairs(ActiveVehicles:Get()) do
+    for veh in pairs(VehicleCache.Get()) do
         if not IsValid(veh) then continue end
 
         if plyPos:DistToSqr(veh:GetPos()) > renderDistanceSqr then
@@ -113,4 +138,4 @@ local function DrawDashboard_v1()
     end
 end
 
-hook.Add("PostDrawTranslucentRenderables", "SEF_Dashboard", DrawDashboard_v1)
+hook.Add("PostDrawTranslucentRenderables", "SEF_Dashboard", DrawDashboards)

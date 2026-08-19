@@ -1,4 +1,11 @@
-SimfphysExtraFeatures.Registry.Register("models/dk_cars/audi/q7/ak_47.mdl", {
+local model = "models/dk_cars/audi/q7/ak_47.mdl"
+local Conditions = SimfphysExtraFeatures.Conditions
+local Registry = SimfphysExtraFeatures.Registry
+local AirSuspension = {
+    levels = { -0.2, -0.1, 0.0, 0.1, 0.2 },
+}
+
+Registry.Register(model, {
     indicators = {
         {
             sprite = "husky_dashboard/turn_signal",
@@ -18,13 +25,14 @@ SimfphysExtraFeatures.Registry.Register("models/dk_cars/audi/q7/ak_47.mdl", {
         {
             sprite = "husky_dashboard/check",
             type = "check_engine",
+            condition = Conditions.EngineRunning,
             pos = Vector(-19.8, 35.6, 57.2),
             ang = Angle(0, 0, 59.5),
             scale = 0.006,
         },
         {
             sprite = "husky_dashboard/lamps",
-            type = "highbeam",
+            type = "lamps",
             pos = Vector(-19.1, 35.415, 56.8),
             ang = Angle(0, 0, 59.5),
             scale = 0.007,
@@ -32,6 +40,7 @@ SimfphysExtraFeatures.Registry.Register("models/dk_cars/audi/q7/ak_47.mdl", {
         {
             sprite = "husky_dashboard/hbrake",
             type = "handbrake",
+            condition = Conditions.EngineRunning,
             pos = Vector(-13.8, 35.12, 54.5),
             ang = Angle(0, 0, 59.5),
             scale = 0.003,
@@ -44,9 +53,7 @@ SimfphysExtraFeatures.Registry.Register("models/dk_cars/audi/q7/ak_47.mdl", {
         },
     },
     features = {
-        "trunk",
-        "hood",
-        "air_up",
-        "air_down",
-    }
+        hood = {},
+        air_suspension = AirSuspension,
+    },
 })

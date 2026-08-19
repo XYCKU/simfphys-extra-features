@@ -29,12 +29,24 @@ function Formatters.GetAutomaticGearText(veh)
     return Formatters.Gears.Drive
 end
 
+function Formatters.GetDriveModeText(veh)
+    if Conditions.Gears.IsReverse(veh) then return Formatters.Gears.Reverse end
+    if Conditions.Gears.IsNeutral(veh) then return Formatters.Gears.Neutral end
+    return Formatters.Gears.Drive
+end
+
+function Formatters.GetGearText(veh)
+    if Conditions.Gears.IsReverse(veh) then return Formatters.Gears.Reverse end
+    if Conditions.Gears.IsNeutral(veh) then return Formatters.Gears.Neutral end
+    return Conditions.Gears.ForwardGear(veh) or ""
+end
+
 function Formatters.SpeedUnitToString(unit)
     if unit == SpeedUnits.MPH then
-        return "MPH"
+        return "mph"
     end
     if unit == SpeedUnits.KMH then
-        return "KMH"
+        return "km/h"
     end
 
     return ""
@@ -44,12 +56,16 @@ function Formatters.GetSpeedUnits(veh)
     return Formatters.SpeedUnitToString(Speed.GetUnit())
 end
 
+function Formatters.GetSpeedUnitsUpper(veh)
+    return Formatters.SpeedUnitToUpperString(Speed.GetUnit())
+end
+
 function Formatters.GetSpeedInUnits(veh)
-    return math.floor(Speed.GetInUnit(veh))
+    return math.Round(Speed.GetInUnit(veh), 0)
 end
 
 function Formatters.GetSpeedWithUnits(veh)
-    return Formatters.GetInUnits(veh) .. " " .. Formatters.GetSpeedUnits(veh)
+    return Formatters.GetSpeedInUnits(veh) .. " " .. Formatters.GetSpeedUnits(veh)
 end
 
 function Formatters.TempUnitToString(unit)
@@ -65,13 +81,30 @@ end
 
 function Formatters.GetOutsideTemperature()
     local provider = Environment.GetProvider()
-    return math.floor(provider.GetTemperature()) .. " " .. Formatters.TempUnitToString(provider.GetTempUnit())
+    return math.Round(provider.GetTemperature(), 0) .. " " .. Formatters.TempUnitToString(provider.GetTempUnit())
+end
+
+function Formatters.GetOutsideTemperatureShort()
+    local provider = Environment.GetProvider()
+    return math.Round(provider.GetTemperature(), 0) .. "°"
 end
 
 function Formatters.GetTime()
     local provider = Environment.GetProvider()
     local minutes = provider.GetTime()
-    local h = math.floor(minutes / 60)
-    local m = minutes % 60
-    return string.format("%02d:%02d", h, m)
+    local hours = math.floor(minutes / 60)
+    local remainingMinutes = minutes % 60
+
+    return string.format("%02d:%02d", hours, remainingMinutes)
+end
+
+function Formatters.SpeedUnitToUpperString(unit)
+    if unit == SpeedUnits.MPH then
+        return "MPH"
+    end
+    if unit == SpeedUnits.KMH then
+        return "KM/H"
+    end
+
+    return ""
 end

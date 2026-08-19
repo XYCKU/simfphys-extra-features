@@ -13,9 +13,34 @@ local Conditions = SimfphysExtraFeatures.Conditions
 
 local LowFuelPercentage = 0.1
 local CheckEnginePercentage = 0.6
+local SourceUnitsPerKMH = 14.5
 
 function Conditions.Driver(veh)
     return veh:GetDriver()
+end
+
+function Conditions.HasDriver(veh)
+    return IsValid(veh:GetDriver())
+end
+
+function Conditions.EngineRunning(veh)
+    return math.floor(veh:GetRPM()) > 0
+end
+
+function Conditions.EngineStopped(veh)
+    return not Conditions.EngineRunning(veh)
+end
+
+function Conditions.Stationary(veh)
+    return math.floor(veh:GetVelocity():Length() / SourceUnitsPerKMH) == 0
+end
+
+function Conditions.DashboardEnabled(veh)
+    return veh:GetNWBool("enable_dashboard")
+end
+
+function Conditions.LampsEnabled(veh)
+    return veh:GetLampsEnabled()
 end
 
 function Conditions.LeftSignal(veh)

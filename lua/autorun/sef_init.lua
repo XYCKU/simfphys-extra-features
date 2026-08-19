@@ -1,77 +1,67 @@
 SimfphysExtraFeatures = SimfphysExtraFeatures or {}
 SimfphysExtraFeatures.Dashboard = SimfphysExtraFeatures.Dashboard or {}
 
-
 SimfphysExtraFeatures.Dashboard.Config = {
     RenderDistance = 200
 }
 
-if SERVER then
-    AddCSLuaFile()
-    AddCSLuaFile("sef/vehicle_conditions.lua")
-    AddCSLuaFile("sef/sef_active_vehicles.lua")
-    AddCSLuaFile("sef/registry.lua")
-    AddCSLuaFile("sef/features.lua")
-    AddCSLuaFile("sef/feat.lua")
-    AddCSLuaFile("sef/helpers.lua")
-    AddCSLuaFile("sef/dashboard/indicator_types.lua")
-    AddCSLuaFile("sef/providers/sef_environment.lua")
-    AddCSLuaFile("sef/providers/sef_speedometer.lua")
-    AddCSLuaFile("sef/formatters.lua")
-    AddCSLuaFile("sef/dashboard/cl_render.lua")
-    
-    AddCSLuaFile("sef/dashboards/audi_q7.lua")
-    AddCSLuaFile("sef/dashboards/bmw_m8_f92.lua")
-    AddCSLuaFile("sef/dashboards/bmw_x6m_f86.lua")
-    AddCSLuaFile("sef/dashboards/chevy_colorado_zr2.lua")
-    AddCSLuaFile("sef/dashboards/ford_cv_fh3.lua")
-    AddCSLuaFile("sef/dashboards/mercedes_gt63_s.lua")
-    AddCSLuaFile("sef/dashboards/rr_cullinan.lua")
-    AddCSLuaFile("sef/dashboards/toyota_supra_2020.lua")
+local SharedFiles = {
+    "sef/vehicle_conditions.lua",
+    "sef/registry.lua",
+    "sef/features/core.lua",
+    "sef/features/definitions.lua",
+    "sef/helpers.lua",
+    "sef/dashboard/indicator_types.lua",
+    "sef/providers/environment.lua",
+    "sef/providers/speed.lua",
+    "sef/formatters.lua",
+}
 
-    include("sef/vehicle_conditions.lua")
-    include("sef/sef_active_vehicles.lua")
-    include("sef/registry.lua")
-    include("sef/features.lua")
-    include("sef/feat.lua")
-    include("sef/helpers.lua")
-    include("sef/dashboard/indicator_types.lua")
-    include("sef/providers/sef_environment.lua")
-    include("sef/providers/sef_speedometer.lua")
-    include("sef/formatters.lua")
-    include("sef/dashboard/cl_render.lua")
+local ServerFiles = {
+    "sef/features/sv_input.lua",
+}
 
-    include("sef/dashboards/audi_q7.lua")
-    include("sef/dashboards/bmw_m8_f92.lua")
-    include("sef/dashboards/bmw_x6m_f86.lua")
-    include("sef/dashboards/chevy_colorado_zr2.lua")
-    include("sef/dashboards/ford_cv_fh3.lua")
-    include("sef/dashboards/mercedes_gt63_s.lua")
-    include("sef/dashboards/rr_cullinan.lua")
-    include("sef/dashboards/toyota_supra_2020.lua")
+local ClientFiles = {
+    "sef/dashboard/cl_fonts.lua",
+    "sef/dashboard/cl_vehicle_cache.lua",
+    "sef/dashboard/cl_renderer.lua",
+}
+
+local VehicleConfigFiles = {
+    "sef/vehicles/audi_q7.lua",
+    "sef/vehicles/bmw_m8_f92.lua",
+    "sef/vehicles/bmw_x6m_f86.lua",
+    "sef/vehicles/chevrolet_colorado_zr2.lua",
+    "sef/vehicles/ford_crown_victoria_fh3.lua",
+    "sef/vehicles/mercedes_benz_gt63s_2018.lua",
+    "sef/vehicles/rolls_royce_cullinan.lua",
+    "sef/vehicles/toyota_gr_supra.lua",
+}
+
+local function IncludeAll(files)
+    for _, file in ipairs(files) do
+        include(file)
+    end
 end
 
---include("sef/dashboard/registry.lua")
+if SERVER then
+    AddCSLuaFile()
+
+    for _, files in ipairs({SharedFiles, ClientFiles, VehicleConfigFiles}) do
+        for _, file in ipairs(files) do
+            AddCSLuaFile(file)
+        end
+    end
+
+    IncludeAll(SharedFiles)
+    IncludeAll(ServerFiles)
+    SimfphysExtraFeatures.Registry.SyncFeatures()
+    IncludeAll(VehicleConfigFiles)
+end
 
 if CLIENT then
-    include("sef/vehicle_conditions.lua")
-    include("sef/sef_active_vehicles.lua")
-    include("sef/registry.lua")
-    include("sef/features.lua")
-    include("sef/feat.lua")
-    include("sef/helpers.lua")
-    include("sef/dashboard/indicator_types.lua")
-    include("sef/providers/sef_environment.lua")
-    include("sef/providers/sef_speedometer.lua")
-    include("sef/formatters.lua")
-    include("sef/dashboard/cl_render.lua")
-
-    include("sef/dashboards/audi_q7.lua")
-    include("sef/dashboards/bmw_m8_f92.lua")
-    include("sef/dashboards/bmw_x6m_f86.lua")
-    include("sef/dashboards/chevy_colorado_zr2.lua")
-    include("sef/dashboards/ford_cv_fh3.lua")
-    include("sef/dashboards/mercedes_gt63_s.lua")
-    include("sef/dashboards/rr_cullinan.lua")
-    include("sef/dashboards/toyota_supra_2020.lua")
+    IncludeAll(SharedFiles)
+    SimfphysExtraFeatures.Registry.SyncFeatures()
+    IncludeAll(ClientFiles)
+    IncludeAll(VehicleConfigFiles)
 end

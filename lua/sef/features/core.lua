@@ -1,7 +1,3 @@
---========================================================--
---  simfphys_extra_features/lua/autorun/sh_features.lua
---========================================================--
-
 SimfphysExtraFeatures = SimfphysExtraFeatures or {}
 SimfphysExtraFeatures.Features = SimfphysExtraFeatures.Features or {}
 
@@ -12,7 +8,7 @@ Features.Configs = Features.Configs or {}
 Features.Types = Features.Types or {}
 Features.Modifiers = Features.Modifiers or {}
 
-local ActiveVehicles = {}
+local AnimatingVehicles = {}
 
 --========================================================--
 --  FEATURE DEFINITIONS
@@ -32,7 +28,7 @@ end
 --  VEHICLE CONFIGS
 --========================================================--
 
-function Features.Register(model, data)
+function Features.RegisterVehicle(model, data)
     Features.Configs[model] = data.features or {}
 end
 
@@ -72,7 +68,7 @@ end
 --========================================================--
 
 function Features.MarkVehicleActive(veh)
-    ActiveVehicles[veh] = true
+    AnimatingVehicles[veh] = true
 end
 
 --========================================================--
@@ -270,6 +266,10 @@ Features.Types["animated"] = {
 --========================================================--
 
 function Features.Execute(feature_id, ply, extra)
+    if not SERVER then return end
+    if not IsValid(ply) then return end
+    if not ply.GetSimfphys then return end
+
     local definition = Features.GetDefinition(feature_id)
     if not definition then return end
 
@@ -327,23 +327,21 @@ function Features.TickVehicle(veh, dt)
     end
 
     if not hasActive then
-        ActiveVehicles[veh] = nil
+        AnimatingVehicles[veh] = nil
     end
 end
 
---========================================================--
---  GLOBAL TICK
---========================================================--
+if SERVER then
+    hook.Add("Think", "SEF_FeaturesTick", function()
+        local dt = FrameTime()
 
-hook.Add("Think", "SEF_FeaturesTick", function()
-    local dt = FrameTime()
+        for veh in pairs(AnimatingVehicles) do
+            if not IsValid(veh) then
+                AnimatingVehicles[veh] = nil
+                continue
+            end
 
-    for veh in pairs(ActiveVehicles) do
-        if not IsValid(veh) then
-            ActiveVehicles[veh] = nil
-            continue
+            Features.TickVehicle(veh, dt)
         end
-
-        Features.TickVehicle(veh, dt)
-    end
-end)
+    end)
+end
