@@ -96,6 +96,18 @@ Before committing:
 4. Check the console for Lua errors and repeated warnings.
 5. Confirm client-only APIs are not included or called on the server.
 
+Run the dependency-free static validator before opening a pull request:
+
+```powershell
+python .\scripts\validate.py
+python -m unittest discover -s tests -v
+```
+
+It checks the loader manifest and realm list placement, literal vehicle model
+registrations, Workshop metadata, dashboard materials, and dashboard font
+definitions. It does not replace compiling GLua or testing the game in both
+realms.
+
 The configuration API is not stable yet, so update this document and
 `ARCHITECTURE.md` when its contract changes.
 
