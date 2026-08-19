@@ -3,6 +3,13 @@ local Features = SimfphysExtraFeatures.Features
 
 Features.RegisterDefinition("trunk", {
     name = "Toggle Trunk",
+    category = "Body",
+    bindings = {
+        {
+            id = "toggle",
+            default = KEY_G,
+        },
+    },
 
     condition = function(veh, ply, cfg)
         return veh:GetDriver() == ply
@@ -40,6 +47,13 @@ Features.RegisterDefinition("trunk", {
 
 Features.RegisterDefinition("hood", {
     name = "Toggle Hood",
+    category = "Body",
+    bindings = {
+        {
+            id = "toggle",
+            default = KEY_H,
+        },
+    },
 
     condition = function(veh, ply)
         return veh:GetDriver() == ply and veh.hood ~= nil
@@ -67,6 +81,21 @@ end
 
 Features.RegisterDefinition("air_suspension", {
     name = "Adjust Air Suspension",
+    category = "Suspension",
+    bindings = {
+        {
+            id = "raise",
+            name = "Raise",
+            default = KEY_O,
+            extra = 1,
+        },
+        {
+            id = "lower",
+            name = "Lower",
+            default = KEY_L,
+            extra = -1,
+        },
+    },
 
     condition = function(veh, ply)
         return veh:GetDriver() == ply
