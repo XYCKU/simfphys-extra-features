@@ -110,30 +110,30 @@ realms.
 
 ### GMod-native server checks
 
-The `GMod runtime` workflow runs only from trusted `main` pushes, release tags,
-or a maintainer's manual dispatch. It intentionally never runs on pull requests,
-because a self-hosted runner executes repository code.
+The `GMod runtime` workflow runs on a GitHub-hosted Ubuntu runner for trusted
+`main` pushes, release tags, or a maintainer's manual dispatch. It intentionally
+does not run on pull requests while the first server setup is being proven.
 
-Set up a dedicated self-hosted Windows runner with the custom
-`gmod-windows` label and a Garry's Mod dedicated server installation. Install
-the dedicated server through SteamCMD as app `4020`, then set the repository
-Actions variables `GMOD_SERVER_DIRECTORY` to that installation's absolute path
-and `GMOD_RUNTIME_ENABLED` to `true`. Until that second variable is set, the
-runtime job is skipped rather than waiting for an unavailable self-hosted
-runner.
+The workflow builds a small image based on `cm2network/steamcmd:root-bookworm`.
+It adds the required 32-bit libraries, anonymously installs Steam app `4020`,
+then launches the Linux dedicated server in Docker volumes. Set the repository
+Actions variable `GMOD_RUNTIME_ENABLED` to `true` and use a manual dispatch for
+the first run. Until then the job is skipped without consuming hosted-runner
+minutes.
 
-Run the same check locally with:
+Run the same check locally on a Docker-enabled Linux host with:
 
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run-gmod-tests.ps1 `
-    -ServerDirectory "D:\gmod-dedicated-server"
+```bash
+bash scripts/run-gmod-tests-docker.sh
 ```
 
-The runner copies the branch's SEF Lua files into a temporary `sef-ci` addon,
-compiles every file through GMod's `CompileFile`, loads the server bootstrap,
-checks registry synchronization and server-authoritative feature requests, then
-removes that temporary addon. It does not validate client dashboard rendering or
-test against a particular installed simfphys fork.
+The runner copies the branch's SEF Lua files into a temporary marked `sef-ci`
+addon, compiles every file through GMod's `CompileFile`, loads the server
+bootstrap, checks registry synchronization and server-authoritative feature
+requests, then removes only that marked addon. It does not validate client
+dashboard rendering or test against a particular installed simfphys fork.
+`scripts/run-gmod-tests.ps1` remains available for a manually installed Windows
+dedicated server.
 
 ### Workshop releases
 
