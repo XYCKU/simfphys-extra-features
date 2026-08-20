@@ -19,6 +19,7 @@ MANIFEST_LISTS = (
     "SharedFiles",
     "ServerFiles",
     "ClientFiles",
+    "DevelopmentClientFiles",
     "VehicleConfigFiles",
 )
 ALLOWED_ADDON_TYPES = {
@@ -106,7 +107,7 @@ def validate_loader(root: Path, errors: list[str]) -> dict[str, list[str]]:
         if not (lua_root / entry).is_file():
             add_error(errors, f"loader entry does not exist: lua/{entry}")
 
-    for name in ("ServerFiles", "ClientFiles"):
+    for name in ("ServerFiles", "ClientFiles", "DevelopmentClientFiles"):
         prefix = "sv_" if name == "ServerFiles" else "cl_"
         for entry in manifests[name]:
             if not Path(entry).name.startswith(prefix):

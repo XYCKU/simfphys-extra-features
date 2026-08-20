@@ -27,6 +27,12 @@ function Registry.GetForModel(model)
     return Storage[model]
 end
 
+function Registry.ForEach(callback)
+    for model, data in pairs(Storage) do
+        callback(model, data)
+    end
+end
+
 function Registry.SyncFeatures()
     for model, data in pairs(Storage) do
         RegisterVehicleFeatures(model, data)

@@ -5,6 +5,10 @@ SimfphysExtraFeatures.Dashboard.Config = {
     RenderDistance = 200
 }
 
+-- Set to false before a release build. Development files will not be sent to
+-- clients or loaded when this is disabled.
+local IncludeDevelopmentTools = true
+
 local SharedFiles = {
     "sef/vehicle_conditions.lua",
     "sef/registry.lua",
@@ -26,6 +30,10 @@ local ClientFiles = {
     "sef/dashboard/cl_fonts.lua",
     "sef/dashboard/cl_vehicle_cache.lua",
     "sef/dashboard/cl_renderer.lua",
+}
+
+local DevelopmentClientFiles = {
+    "sef/dashboard/cl_force_indicators.lua",
 }
 
 local VehicleConfigFiles = {
@@ -54,6 +62,12 @@ if SERVER then
         end
     end
 
+    if IncludeDevelopmentTools then
+        for _, file in ipairs(DevelopmentClientFiles) do
+            AddCSLuaFile(file)
+        end
+    end
+
     IncludeAll(SharedFiles)
     IncludeAll(ServerFiles)
     SimfphysExtraFeatures.Registry.SyncFeatures()
@@ -65,4 +79,8 @@ if CLIENT then
     SimfphysExtraFeatures.Registry.SyncFeatures()
     IncludeAll(ClientFiles)
     IncludeAll(VehicleConfigFiles)
+
+    if IncludeDevelopmentTools then
+        IncludeAll(DevelopmentClientFiles)
+    end
 end
