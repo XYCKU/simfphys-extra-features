@@ -1,0 +1,45 @@
+name: GMod runtime
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gmod-runtime
+  cancel-in-progress: false
+
+jobs:
+  gmod-runtime:
+    name: GMod compile and server tests
+    if: vars.GMOD_RUNTIME_ENABLED == 'true'
+    runs-on: [self-hosted, gmod-windows]
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run dedicated-server checks
+        shell: pwsh
+        env:
+          GMOD_SERVER_DIRECTORY: ${{ vars.GMOD_SERVER_DIRECTORY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:GMOD_SERVER_DIRECTORY)) {
+            throw "Set the GMOD_SERVER_DIRECTORY repository variable before enabling this job."
+          }
+
+          .\scripts\run-gmod-tests.ps1 -ServerDirectory $env:GMOD_SERVER_DIRECTORY
+
+      - name: Upload server logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gmod-server-logs
+          path: artifacts/gmod-tests.*.log
+          if-no-files-found: ignore

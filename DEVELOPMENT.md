@@ -108,6 +108,33 @@ registrations, Workshop metadata, dashboard materials, and dashboard font
 definitions. It does not replace compiling GLua or testing the game in both
 realms.
 
+### GMod-native server checks
+
+The `GMod runtime` workflow runs only from trusted `main` pushes, release tags,
+or a maintainer's manual dispatch. It intentionally never runs on pull requests,
+because a self-hosted runner executes repository code.
+
+Set up a dedicated self-hosted Windows runner with the custom
+`gmod-windows` label and a Garry's Mod dedicated server installation. Install
+the dedicated server through SteamCMD as app `4020`, then set the repository
+Actions variables `GMOD_SERVER_DIRECTORY` to that installation's absolute path
+and `GMOD_RUNTIME_ENABLED` to `true`. Until that second variable is set, the
+runtime job is skipped rather than waiting for an unavailable self-hosted
+runner.
+
+Run the same check locally with:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run-gmod-tests.ps1 `
+    -ServerDirectory "D:\gmod-dedicated-server"
+```
+
+The runner copies the branch's SEF Lua files into a temporary `sef-ci` addon,
+compiles every file through GMod's `CompileFile`, loads the server bootstrap,
+checks registry synchronization and server-authoritative feature requests, then
+removes that temporary addon. It does not validate client dashboard rendering or
+test against a particular installed simfphys fork.
+
 The configuration API is not stable yet, so update this document and
 `ARCHITECTURE.md` when its contract changes.
 
