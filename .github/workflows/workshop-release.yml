@@ -1,0 +1,89 @@
+name: Workshop release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workshop-publish
+  cancel-in-progress: false
+
+jobs:
+  workshop-publish:
+    name: Package and publish Workshop release
+    if: vars.WORKSHOP_PUBLISH_ENABLED == 'true'
+    runs-on: [self-hosted, linux, x64, gmod-publisher-linux]
+    timeout-minutes: 10
+    environment:
+      name: workshop-production
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Verify protected release tag
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF_TYPE" != "tag" || ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Workshop releases require a vMAJOR.MINOR.PATCH tag." >&2
+            exit 1
+          fi
+
+          git fetch origin main:refs/remotes/origin/main
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "Release tags must point to a commit reachable from main." >&2
+            exit 1
+          fi
+
+      - name: Validate release source
+        run: python scripts/validate.py
+
+      - name: Package release addon
+        shell: bash
+        env:
+          GMOD_DIRECTORY: ${{ vars.GMOD_DIRECTORY }}
+        run: |
+          if [[ -z "$GMOD_DIRECTORY" ]]; then
+            echo "Set the GMOD_DIRECTORY repository variable before enabling Workshop publishing." >&2
+            exit 1
+          fi
+
+          bash scripts/package-linux.sh --gmod-directory "$GMOD_DIRECTORY"
+
+      - name: Upload release package
+        uses: actions/upload-artifact@v7
+        with:
+          name: sef-${{ github.ref_name }}
+          path: |
+            artifacts/simfphys-extra-features.gma
+            artifacts/simfphys-extra-features.gma.sha256
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish Workshop update
+        shell: bash
+        env:
+          GMOD_DIRECTORY: ${{ vars.GMOD_DIRECTORY }}
+          WORKSHOP_ITEM_ID: ${{ vars.WORKSHOP_ITEM_ID }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if [[ -z "$WORKSHOP_ITEM_ID" ]]; then
+            echo "Set the WORKSHOP_ITEM_ID repository variable before enabling Workshop publishing." >&2
+            exit 1
+          fi
+
+          bash scripts/publish-workshop-linux.sh \
+            --gmod-directory "$GMOD_DIRECTORY" \
+            --gma-path artifacts/simfphys-extra-features.gma \
+            --workshop-item-id "$WORKSHOP_ITEM_ID" \
+            --change-note "Release $RELEASE_TAG"

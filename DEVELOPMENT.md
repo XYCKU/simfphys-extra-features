@@ -96,5 +96,94 @@ Before committing:
 4. Check the console for Lua errors and repeated warnings.
 5. Confirm client-only APIs are not included or called on the server.
 
+Run the dependency-free static validator before opening a pull request:
+
+```powershell
+python .\scripts\validate.py
+python -m unittest discover -s tests -v
+```
+
+It checks the loader manifest and realm list placement, literal vehicle model
+registrations, Workshop metadata, dashboard materials, and dashboard font
+definitions. It does not replace compiling GLua or testing the game in both
+realms.
+
+### GMod-native server checks
+
+The `GMod runtime` workflow runs on a GitHub-hosted Ubuntu runner for trusted
+`main` pushes, release tags, or a maintainer's manual dispatch. It intentionally
+does not run on pull requests while the first server setup is being proven.
+
+The workflow builds a small image based on `cm2network/steamcmd:root-bookworm`.
+It adds the required 32-bit libraries, anonymously installs Steam app `4020`,
+then launches the Linux dedicated server in Docker volumes. Set the repository
+Actions variable `GMOD_RUNTIME_ENABLED` to `true` and use a manual dispatch for
+the first run. Until then the job is skipped without consuming hosted-runner
+minutes.
+
+Run the same check locally on a Docker-enabled Linux host with:
+
+```bash
+bash scripts/run-gmod-tests-docker.sh
+```
+
+The runner copies the branch's SEF Lua files into a temporary marked `sef-ci`
+addon, compiles every file through GMod's `CompileFile`, loads the server
+bootstrap, checks registry synchronization and server-authoritative feature
+requests, then removes only that marked addon. It does not validate client
+dashboard rendering or test against a particular installed simfphys fork.
+`scripts/run-gmod-tests.ps1` remains available for a manually installed Windows
+dedicated server.
+
+### Workshop releases
+
+Create the Workshop item manually once, with its required 512x512 JPEG icon.
+The publisher runner's Steam account must own that item. Do not store Steam
+credentials in GitHub; `gmpublish.exe` uses the runner's existing Steam session.
+
+Configure a dedicated self-hosted Linux runner with the `gmod-publisher-linux`
+label, GitHub Actions Runner v2.327.1 or later, and a Garry's Mod client
+installation. The runner needs the native `gmad_linux` and `gmpublish_linux`
+tools from that installation's `bin` directory. Create a protected GitHub
+environment named `workshop-production` with a required reviewer, then set
+these repository Actions variables:
+
+| Variable | Value |
+| --- | --- |
+| `GMOD_DIRECTORY` | Absolute Linux Garry's Mod client directory containing `bin/gmad_linux` and `bin/gmpublish_linux` |
+| `WORKSHOP_ITEM_ID` | Existing Workshop item ID owned by the publisher account |
+| `WORKSHOP_PUBLISH_ENABLED` | `true` only after the runner and environment protection are ready |
+
+Pushing a `vMAJOR.MINOR.PATCH` tag pointing to `main` triggers the workflow. It
+reruns static validation, builds the GMA, uploads the GMA and checksum as a
+GitHub artifact, waits for the `workshop-production` approval, then updates the
+existing item with the ASCII change note `Release vMAJOR.MINOR.PATCH`.
+
 The configuration API is not stable yet, so update this document and
 `ARCHITECTURE.md` when its contract changes.
+
+## Build a Workshop package
+
+The committed `addon.json` defines the Workshop metadata. Packaging stages only
+the addon folders (`lua`, `materials`, and `resource`), so development files
+cannot enter the `.gma`.
+
+From a Linux shell, run:
+
+```bash
+bash scripts/package-linux.sh --gmod-directory /path/to/GarrysMod
+```
+
+The script invokes that installation's `bin/gmad_linux` and writes the package
+and its SHA-256 checksum to `artifacts/`. It does not publish to the Workshop.
+Publishing and its required 512x512 JPEG icon are intentionally handled by the
+separate release workflow.
+
+The PowerShell package script remains available as a local Windows fallback:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\package.ps1 `
+    -GmodDirectory "D:\Games\steamapps\common\GarrysMod"
+```
+
+It is not used by GitHub Actions.
