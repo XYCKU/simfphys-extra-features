@@ -141,14 +141,16 @@ Create the Workshop item manually once, with its required 512x512 JPEG icon.
 The publisher runner's Steam account must own that item. Do not store Steam
 credentials in GitHub; `gmpublish.exe` uses the runner's existing Steam session.
 
-Configure a dedicated self-hosted Windows runner with the
-`gmod-publisher-windows` label and a Garry's Mod client installation. Create a
-protected GitHub environment named `workshop-production` with a required
-reviewer, then set these repository Actions variables:
+Configure a dedicated self-hosted Linux runner with the `gmod-publisher-linux`
+label, GitHub Actions Runner v2.327.1 or later, and a Garry's Mod client
+installation. The runner needs the native `gmad_linux` and `gmpublish_linux`
+tools from that installation's `bin` directory. Create a protected GitHub
+environment named `workshop-production` with a required reviewer, then set
+these repository Actions variables:
 
 | Variable | Value |
 | --- | --- |
-| `GMOD_DIRECTORY` | Absolute Garry's Mod client directory containing `bin/gmad.exe` and `bin/gmpublish.exe` |
+| `GMOD_DIRECTORY` | Absolute Linux Garry's Mod client directory containing `bin/gmad_linux` and `bin/gmpublish_linux` |
 | `WORKSHOP_ITEM_ID` | Existing Workshop item ID owned by the publisher account |
 | `WORKSHOP_PUBLISH_ENABLED` | `true` only after the runner and environment protection are ready |
 
@@ -166,14 +168,22 @@ The committed `addon.json` defines the Workshop metadata. Packaging stages only
 the addon folders (`lua`, `materials`, and `resource`), so development files
 cannot enter the `.gma`.
 
-From PowerShell, run:
+From a Linux shell, run:
+
+```bash
+bash scripts/package-linux.sh --gmod-directory /path/to/GarrysMod
+```
+
+The script invokes that installation's `bin/gmad_linux` and writes the package
+and its SHA-256 checksum to `artifacts/`. It does not publish to the Workshop.
+Publishing and its required 512x512 JPEG icon are intentionally handled by the
+separate release workflow.
+
+The PowerShell package script remains available as a local Windows fallback:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\package.ps1 `
     -GmodDirectory "D:\Games\steamapps\common\GarrysMod"
 ```
 
-The script invokes that installation's `bin\gmad.exe` and writes the package
-and its SHA-256 checksum to `artifacts/`. It does not publish to the Workshop.
-Publishing and its required 512x512 JPEG icon are intentionally handled by the
-separate release workflow.
+It is not used by GitHub Actions.

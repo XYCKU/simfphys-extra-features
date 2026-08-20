@@ -16,45 +16,52 @@ jobs:
   workshop-publish:
     name: Package and publish Workshop release
     if: vars.WORKSHOP_PUBLISH_ENABLED == 'true'
-    runs-on: [self-hosted, gmod-publisher-windows]
+    runs-on: [self-hosted, linux, x64, gmod-publisher-linux]
     timeout-minutes: 10
     environment:
       name: workshop-production
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
       - name: Verify protected release tag
-        shell: pwsh
+        shell: bash
         run: |
-          if ($env:GITHUB_REF_TYPE -ne "tag" -or $env:GITHUB_REF_NAME -notmatch "^v\d+\.\d+\.\d+$") {
-            throw "Workshop releases require a vMAJOR.MINOR.PATCH tag."
-          }
+          if [[ "$GITHUB_REF_TYPE" != "tag" || ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Workshop releases require a vMAJOR.MINOR.PATCH tag." >&2
+            exit 1
+          fi
 
           git fetch origin main:refs/remotes/origin/main
-          git merge-base --is-ancestor HEAD origin/main
-          if ($LASTEXITCODE -ne 0) {
-            throw "Release tags must point to a commit reachable from main."
-          }
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "Release tags must point to a commit reachable from main." >&2
+            exit 1
+          fi
 
       - name: Validate release source
         run: python scripts/validate.py
 
       - name: Package release addon
-        shell: pwsh
+        shell: bash
         env:
           GMOD_DIRECTORY: ${{ vars.GMOD_DIRECTORY }}
         run: |
-          if ([string]::IsNullOrWhiteSpace($env:GMOD_DIRECTORY)) {
-            throw "Set the GMOD_DIRECTORY repository variable before enabling Workshop publishing."
-          }
+          if [[ -z "$GMOD_DIRECTORY" ]]; then
+            echo "Set the GMOD_DIRECTORY repository variable before enabling Workshop publishing." >&2
+            exit 1
+          fi
 
-          .\scripts\package.ps1 -GmodDirectory $env:GMOD_DIRECTORY
+          bash scripts/package-linux.sh --gmod-directory "$GMOD_DIRECTORY"
 
       - name: Upload release package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sef-${{ github.ref_name }}
           path: |
@@ -64,18 +71,19 @@ jobs:
           retention-days: 30
 
       - name: Publish Workshop update
-        shell: pwsh
+        shell: bash
         env:
           GMOD_DIRECTORY: ${{ vars.GMOD_DIRECTORY }}
           WORKSHOP_ITEM_ID: ${{ vars.WORKSHOP_ITEM_ID }}
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          if ([string]::IsNullOrWhiteSpace($env:WORKSHOP_ITEM_ID)) {
-            throw "Set the WORKSHOP_ITEM_ID repository variable before enabling Workshop publishing."
-          }
+          if [[ -z "$WORKSHOP_ITEM_ID" ]]; then
+            echo "Set the WORKSHOP_ITEM_ID repository variable before enabling Workshop publishing." >&2
+            exit 1
+          fi
 
-          .\scripts\publish-workshop.ps1 `
-            -GmodDirectory $env:GMOD_DIRECTORY `
-            -GmaPath .\artifacts\simfphys-extra-features.gma `
-            -WorkshopItemId $env:WORKSHOP_ITEM_ID `
-            -ChangeNote "Release $env:RELEASE_TAG"
+          bash scripts/publish-workshop-linux.sh \
+            --gmod-directory "$GMOD_DIRECTORY" \
+            --gma-path artifacts/simfphys-extra-features.gma \
+            --workshop-item-id "$WORKSHOP_ITEM_ID" \
+            --change-note "Release $RELEASE_TAG"

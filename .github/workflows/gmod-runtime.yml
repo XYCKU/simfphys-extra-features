@@ -23,14 +23,14 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Run dedicated-server checks
         run: bash scripts/run-gmod-tests-docker.sh
 
       - name: Upload server logs on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: gmod-server-logs
           path: artifacts/gmod-tests.log
