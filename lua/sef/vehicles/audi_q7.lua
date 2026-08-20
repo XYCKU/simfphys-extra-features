@@ -53,7 +53,6 @@ Registry.Register(model, {
         },
     },
     features = {
-        hood = {},
         air_suspension = AirSuspension,
     },
 })
