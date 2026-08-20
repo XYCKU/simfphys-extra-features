@@ -135,6 +135,28 @@ checks registry synchronization and server-authoritative feature requests, then
 removes that temporary addon. It does not validate client dashboard rendering or
 test against a particular installed simfphys fork.
 
+### Workshop releases
+
+Create the Workshop item manually once, with its required 512x512 JPEG icon.
+The publisher runner's Steam account must own that item. Do not store Steam
+credentials in GitHub; `gmpublish.exe` uses the runner's existing Steam session.
+
+Configure a dedicated self-hosted Windows runner with the
+`gmod-publisher-windows` label and a Garry's Mod client installation. Create a
+protected GitHub environment named `workshop-production` with a required
+reviewer, then set these repository Actions variables:
+
+| Variable | Value |
+| --- | --- |
+| `GMOD_DIRECTORY` | Absolute Garry's Mod client directory containing `bin/gmad.exe` and `bin/gmpublish.exe` |
+| `WORKSHOP_ITEM_ID` | Existing Workshop item ID owned by the publisher account |
+| `WORKSHOP_PUBLISH_ENABLED` | `true` only after the runner and environment protection are ready |
+
+Pushing a `vMAJOR.MINOR.PATCH` tag pointing to `main` triggers the workflow. It
+reruns static validation, builds the GMA, uploads the GMA and checksum as a
+GitHub artifact, waits for the `workshop-production` approval, then updates the
+existing item with the ASCII change note `Release vMAJOR.MINOR.PATCH`.
+
 The configuration API is not stable yet, so update this document and
 `ARCHITECTURE.md` when its contract changes.
 

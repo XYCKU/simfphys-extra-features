@@ -1,0 +1,81 @@
+name: Workshop release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workshop-publish
+  cancel-in-progress: false
+
+jobs:
+  workshop-publish:
+    name: Package and publish Workshop release
+    if: vars.WORKSHOP_PUBLISH_ENABLED == 'true'
+    runs-on: [self-hosted, gmod-publisher-windows]
+    timeout-minutes: 10
+    environment:
+      name: workshop-production
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify protected release tag
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF_TYPE -ne "tag" -or $env:GITHUB_REF_NAME -notmatch "^v\d+\.\d+\.\d+$") {
+            throw "Workshop releases require a vMAJOR.MINOR.PATCH tag."
+          }
+
+          git fetch origin main:refs/remotes/origin/main
+          git merge-base --is-ancestor HEAD origin/main
+          if ($LASTEXITCODE -ne 0) {
+            throw "Release tags must point to a commit reachable from main."
+          }
+
+      - name: Validate release source
+        run: python scripts/validate.py
+
+      - name: Package release addon
+        shell: pwsh
+        env:
+          GMOD_DIRECTORY: ${{ vars.GMOD_DIRECTORY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:GMOD_DIRECTORY)) {
+            throw "Set the GMOD_DIRECTORY repository variable before enabling Workshop publishing."
+          }
+
+          .\scripts\package.ps1 -GmodDirectory $env:GMOD_DIRECTORY
+
+      - name: Upload release package
+        uses: actions/upload-artifact@v4
+        with:
+          name: sef-${{ github.ref_name }}
+          path: |
+            artifacts/simfphys-extra-features.gma
+            artifacts/simfphys-extra-features.gma.sha256
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish Workshop update
+        shell: pwsh
+        env:
+          GMOD_DIRECTORY: ${{ vars.GMOD_DIRECTORY }}
+          WORKSHOP_ITEM_ID: ${{ vars.WORKSHOP_ITEM_ID }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:WORKSHOP_ITEM_ID)) {
+            throw "Set the WORKSHOP_ITEM_ID repository variable before enabling Workshop publishing."
+          }
+
+          .\scripts\publish-workshop.ps1 `
+            -GmodDirectory $env:GMOD_DIRECTORY `
+            -GmaPath .\artifacts\simfphys-extra-features.gma `
+            -WorkshopItemId $env:WORKSHOP_ITEM_ID `
+            -ChangeNote "Release $env:RELEASE_TAG"
