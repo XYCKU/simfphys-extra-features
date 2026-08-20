@@ -10,22 +10,6 @@ local DashboardActive = Helpers.Or(
     Conditions.FogLights
 )
 
-local function GetGearText(veh)
-    if Conditions.Gears.IsReverse(veh) then
-        return Formatters.Gears.Reverse
-    end
-
-    if Conditions.Gears.IsNeutral(veh) then
-        if Conditions.Stationary(veh) and Conditions.EngineStopped(veh) then
-            return Formatters.Gears.Parking
-        end
-
-        return Formatters.Gears.Neutral
-    end
-
-    return Conditions.Gears.ForwardGear(veh) or ""
-end
-
 local data = {
     indicators = {
         {
@@ -83,7 +67,7 @@ local data = {
     },
     text_indicators = {
         {
-            getter = GetGearText,
+            getter = Formatters.GetAutomaticGearText,
             condition = DashboardActive,
             pos = Vector(-18.9, 29.38, 39.55),
             ang = Angle(0, 0, 72.65),

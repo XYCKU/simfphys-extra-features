@@ -1,5 +1,8 @@
 local Conditions = SimfphysExtraFeatures.Conditions
 local Registry = SimfphysExtraFeatures.Registry
+local AirSuspension = {
+    levels = { -0.2, -0.1, 0.0, 0.1, 0.2 },
+}
 
 local data = {
     indicators = {
@@ -51,7 +54,10 @@ local data = {
             ang = Angle(0, 0, 70),
             scale = 0.006,
         },
-    }
+    },
+    features = {
+        air_suspension = AirSuspension,
+    },
 }
 
 Registry.Register("models/ctvehicles/rolls_royce/cullinan.mdl", data)

@@ -82,7 +82,7 @@ local data = {
 
     text_indicators = {
         {
-            getter = Formatters.GetDriveModeText,
+            getter = Formatters.GetAutomaticGearText,
             condition = Conditions.EngineRunning,
             pos = Vector(-19.68, 40, 58.5),
             ang = Angle(0, 0, 65.5),
