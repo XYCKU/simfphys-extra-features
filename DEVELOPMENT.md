@@ -13,12 +13,16 @@ the reusable behavior.
 - Add shared modules to `SharedFiles`.
 - Add server-only modules to `ServerFiles`.
 - Add client-only modules to `ClientFiles`.
+- Add optional client-only development tools to `DevelopmentClientFiles`.
 - Add built-in vehicle registrations to `VehicleConfigFiles`.
 
 The server sends shared, client-only, and vehicle configuration files to
 clients. Server-only files remain server-side. Client rendering belongs in
 client-only modules. Feature key handling, execution, and animation ticking
 belong on the server.
+
+Set `IncludeDevelopmentTools` to `false` in the loader before a release build
+to exclude every `DevelopmentClientFiles` entry from client download and load.
 
 ## Add a dashboard
 
